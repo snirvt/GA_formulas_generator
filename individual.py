@@ -34,7 +34,7 @@ class Individual():
         if new_size == self.individual_size:
             return
         if new_size < self.individual_size:
-            self.remove_genotype_parts(new_size)
+            self.remove_genotype_parts()
             return
 
     def remove_genotype_parts(self, new_size):

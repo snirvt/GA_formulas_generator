@@ -57,7 +57,7 @@ class Test_Individual(unittest.TestCase):
         i = Individual(num_features = num_features, max_individual_size = max_individual_size, probability_handler=probability_handler)
         size_before = i.individual_size
         
-        i.remove_genotype_parts(max_individual_size - 1)
+        i.remove_genotype_parts(size_before - 1)
         size_after = i.individual_size
         
         if size_before == 1:

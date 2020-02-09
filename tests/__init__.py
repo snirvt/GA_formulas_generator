@@ -1,0 +1,1 @@
+# C:\Users\snirv\AppData\Local\conda\conda\envs\snirpy\python.exe -m pytest --cov=. --cov-report=term-missing .\tests\

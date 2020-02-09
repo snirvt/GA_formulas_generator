@@ -23,7 +23,7 @@ class Test_Population_Handler(unittest.TestCase):
         population_size = 10
         probability_handler = Probability_Handler()
 
-        ph = Population_Handler(num_features = num_features,probability_handler=probability_handler, max_individual_size = max_individual_size)
+        ph = Population_Handler(num_features = num_features, probability_handler=probability_handler, max_individual_size = max_individual_size)
         ph.create_population(population_size = population_size)
         self.assertIsNotNone(ph.population)
         self.assertEqual(len(ph.population), population_size)

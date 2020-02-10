@@ -29,7 +29,7 @@ class Mutation_Handler():
         if key == constants.DNA_ACTIONS_STR:
             mutator_function = lambda : ng.generate_n_uniform_random_integers(min_val=0 , max_val = constants.NUM_ACTIONS , size=1)[0]
         if key == constants.DNA_FEATURES_STR:
-            mutator_function = lambda : ng.generate_n_uniform_random_integers(min_val=0, max_val = constants.MAX_NUM_OF_FEATURES, size = 1)[0]
+            mutator_function = lambda : ng.generate_n_uniform_random_integers(min_val=0, max_val = self.probability_handler.max_feature_number, size = 1)[0]
             
         mutation_chance = self.probability_handler.get_probability_dict()[key]
         self.vector_mutation(gen, mutation_chance, mutator_function)
@@ -67,7 +67,7 @@ class Mutation_Handler():
             
 
     def insert_new_values_to_dna(self, index, dna_dict):
-        dna_dict[constants.DNA_FEATURES_STR].insert(index , ng.generate_n_uniform_random_integers(min_val=0, max_val = constants.MAX_NUM_OF_FEATURES, size = 1)[0])
+        dna_dict[constants.DNA_FEATURES_STR].insert(index , ng.generate_n_uniform_random_integers(min_val=0, max_val = self.probability_handler.max_feature_number, size = 1)[0])
         dna_dict[constants.DNA_WEIGHTS_STR].insert(index, ng.generate_n_uniform_random_values(1)[0])
         dna_dict[constants.DNA_PARENTHESES_STR].insert(index, ng.generate_n_uniform_random_integers(min_val=0 , max_val=2 , size=1)[0])
         dna_dict[constants.DNA_ACTIONS_STR].insert(index, ng.generate_n_uniform_random_integers(min_val = 0 , max_val = constants.NUM_ACTIONS, size = 1)[0])

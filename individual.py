@@ -19,9 +19,9 @@ class Individual():
         self.weights = ng.generate_n_uniform_random_values(self.individual_size)
         self.parentheses_binary_vec = ng.generate_n_uniform_random_integers(min_val=0 , max_val=2 , size=self.individual_size)
         self.actions = ng.generate_n_uniform_random_integers(min_val=0 , max_val = self.num_actions , size = self.individual_size)
-        return self.creat_dna_dictionary()
+        return self.create_dna_dictionary()
 
-    def creat_dna_dictionary(self):
+    def create_dna_dictionary(self):
         self.dna_dict = {}
         self.dna_dict[constants.DNA_SIZE_STR] = self.individual_size
         self.dna_dict[constants.DNA_WEIGHTS_STR] = self.weights
@@ -29,6 +29,14 @@ class Individual():
         self.dna_dict[constants.DNA_PARENTHESES_STR] = self.parentheses_binary_vec
         self.dna_dict[constants.DNA_ACTIONS_STR] = self.actions
         return self.dna_dict
+    
+    @staticmethod
+    def merge_dna_data(dna_dict):
+        tree_values = dna_dict[constants.DNA_WEIGHTS_STR]
+        feature_values = dna_dict[constants.DNA_FEATURES_STR]
+        parentheses_values = dna_dict[constants.DNA_PARENTHESES_STR]
+        actions_values = dna_dict[constants.DNA_ACTIONS_STR]
+        return list(zip(tree_values, feature_values, parentheses_values, actions_values))
 
         
 

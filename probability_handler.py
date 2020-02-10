@@ -1,14 +1,16 @@
 
+import constants
+
 
 class Probability_Handler():
 
     def __init__(self):
         self.prob_dict = {}
-        self.prob_dict['size'] = 0.2
-        self.prob_dict['feature_indices'] = 0.2
-        self.prob_dict['weights'] = 0.2
-        self.prob_dict['parentheses_binary_vec'] = 0.2
-        self.prob_dict['actions'] = 0.2
+        self.prob_dict[constants.DNA_SIZE_STR] = 0.2
+        self.prob_dict[constants.DNA_FEATURES_STR] = 0.2
+        self.prob_dict[constants.DNA_WEIGHTS_STR] = 0.2
+        self.prob_dict[constants.DNA_PARENTHESES_STR] = 0.2
+        self.prob_dict[constants.DNA_ACTIONS_STR] = 0.2
 
     def set_ptobability(self, prob_dict):
         self.prob_dict = prob_dict

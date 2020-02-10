@@ -3,6 +3,7 @@ import random
 
 ###################################
 import numbers_generator as ng
+import constants
 # import mutatation_handler as mh
 ###################################
 
@@ -11,7 +12,6 @@ class Individual():
         self.num_features = num_features
         self.max_individual_size = max_individual_size
         self.num_actions = num_actions
-        self.be_born()
         
     def be_born(self):
         self.individual_size = ng.generate_gaussian_integers(mu=3, sigma=1, lower_limit=1, upper_limit=5)[0]
@@ -23,11 +23,11 @@ class Individual():
 
     def creat_dna_dictionary(self):
         self.dna_dict = {}
-        self.dna_dict['size'] = self.individual_size
-        self.dna_dict['weights'] = self.weights
-        self.dna_dict['feature_indices'] = self.feature_indices
-        self.dna_dict['parentheses_binary_vec'] = self.parentheses_binary_vec
-        self.dna_dict['actions'] = self.actions
+        self.dna_dict[constants.DNA_SIZE_STR] = self.individual_size
+        self.dna_dict[constants.DNA_WEIGHTS_STR] = self.weights
+        self.dna_dict[constants.DNA_FEATURES_STR] = self.feature_indices
+        self.dna_dict[constants.DNA_PARENTHESES_STR] = self.parentheses_binary_vec
+        self.dna_dict[constants.DNA_ACTIONS_STR] = self.actions
         return self.dna_dict
 
         

@@ -22,6 +22,17 @@ class Test_tree(unittest.TestCase):
             tree.insert(d)
         tree.pre_order(pre_order_result)
         self.assertEqual(pre_order_result, pre_order_correct)
+        
+
+    def test_delete_tree(self):
+        data, _ = create_tree_data()
+        tree = Tree()
+        for d in data:
+            tree.insert(d)
+        tree.delete_tree()
+        self.assertIsNone(tree.node.data)
+        self.assertIsNone(tree.node.left)
+        self.assertIsNone(tree.node.right)
 
         
 

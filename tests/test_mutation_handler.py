@@ -81,35 +81,49 @@ def create_mutation_handler_test():
     return mh
 
 
-# @pytest.fixture(name="mut_handler")
-# def mutation_handler_fixture(mocker):
-#     #  Bring up
-#     yield Mutation_Handler()
-#     #  Tear Down
+@pytest.fixture(name="mut_handler")
+def mutation_handler_fixture(mocker):
+    #  Bring up
+    yield Mutation_Handler(probability_handler=None)
+    #  Tear Down
 
 
-# @pytest.fixture(name="dna_dict")
-# def dict_fixture(mocker):
-#     #  Bring up
-#     dna_dict = {}
-#     dna_dict['size'] = 3
-#     dna_dict['feature_indices'] = [0,1,2]
-#     dna_dict['weights'] = [0,1,2]
-#     dna_dict['parentheses_binary_vec'] = [0,1,1]
-#     dna_dict['actions'] = [0,1,2]
+@pytest.fixture(name="dna_dict")
+def dict_fixture(mocker):
+    #  Bring up
+    dna_dict = {}
+    dna_dict['size'] = 3
+    dna_dict['feature_indices'] = [0,1,2]
+    dna_dict['weights'] = [0,1,2]
+    dna_dict['parentheses_binary_vec'] = [0,1,1]
+    dna_dict['actions'] = [0,1,2]
 
-#     yield dna_dict
-#     #  Tear Down
+    yield dna_dict
+    #  Tear Down
  
-# @pytest.mark.parametrize('dna_dict_size', [5,6])
-# @pytest.mark.parametrize("gaus_int", [[5], [7]])
-# @mock.patch("mutation_handler.ng", autospec=True)
-# def test_mutate_size(mocked_ng, gaus_int, dna_dict_size, mut_handler, mocker):
-#     mocked_ng.generate_gaussian_integers.return_value = gaus_int
-#     mut_handler.remove_genotype_parts = mocker.MagicMock()
-#     mut_handler.add_genotype_parts = mocker.MagicMock()
-#     mut_handler.mutate_size({"size": dna_dict_size})
+@pytest.mark.parametrize('dna_dict_size', [5,6])
+@pytest.mark.parametrize("gaus_int", [[5], [7]])
+@pytest.mark.parametrize("val,state", [(5,True),(7,False)])
+@mock.patch("mutation_handler.ng", autospec=True)
+def test_mutate_size(mocked_ng,val,state, gaus_int, dna_dict_size, mut_handler, mocker):
+    mocked_ng.generate_gaussian_integers.return_value = gaus_int
+    mut_handler.remove_genotype_parts = mocker.MagicMock(return_value=None)
+    mut_handler.add_genotype_parts = mocker.MagicMock(return_value=None)
+    mut_handler.mutate_size({"size": dna_dict_size})
     
+    add_called = 0 ## how many times should the method be called
+    remove_called = 0
+
+    if (gaus_int[0] < dna_dict_size):
+        remove_called = 1
+
+    if (gaus_int[0] > dna_dict_size):
+        add_called = 1
+
+    assert(mut_handler.add_genotype_parts.call_count == add_called)
+    assert(mut_handler.remove_genotype_parts.call_count == remove_called)
+        
+        
 
 # @pytest.mark.parametrize("uniform_int", [[1]])
 # @mock.patch("mutation_handler.ng", autospec=True)

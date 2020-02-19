@@ -20,7 +20,7 @@ class Population_Handler():
     def create_population(self, population_size = 10): 
         self.population = np.empty([population_size]).astype(object)
         for i in range(population_size):
-            self.population[i]=self.create_individual()
+            self.population[i] = self.create_individual()
 
     def mutate_population(self):
         for individual in self.population:
@@ -31,3 +31,6 @@ class Population_Handler():
 
     def get_population(self):
         return self.population
+
+    def set_population(self, new_generation):
+        self.population = new_generation

@@ -4,7 +4,6 @@ import random
 ###################################
 import numbers_generator as ng
 import constants
-# import mutatation_handler as mh
 ###################################
 
 class Individual():
@@ -37,6 +36,22 @@ class Individual():
         parentheses_values = dna_dict[constants.DNA_PARENTHESES_STR]
         actions_values = dna_dict[constants.DNA_ACTIONS_STR]
         return list(zip(tree_values, feature_values, parentheses_values, actions_values))
+    
+    @staticmethod
+    def get_merged_feature_values(merged):
+        return merged[1]
+
+    @staticmethod
+    def get_merged_parentheses_values(merged):
+        return merged[2]
+
+    @staticmethod
+    def get_merged_actions_values(merged):
+        return merged[3]
+
+    @staticmethod
+    def get_all_merged_values(merged):
+        return merged[1], merged[2] , merged[3]
 
         
 

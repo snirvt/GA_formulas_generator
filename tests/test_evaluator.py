@@ -16,7 +16,7 @@ class Test_Evaluator(unittest.TestCase):
 
     def test_build_individual_binary_tree(self):
         dna_dict,pre_order_correct = create_dna_dict()
-        evaluator = Evaluator(X=None, y=None, column_names=None)
+        evaluator = Evaluator(X=np.array([]), y=None, column_names=None)
         evaluator.build_individual_binary_tree(dna_dict)
         tree = evaluator.tree
         self.assertIsNotNone(tree)
@@ -30,12 +30,12 @@ class Test_Evaluator(unittest.TestCase):
 
     def test_extract_tree_expression(self):
         dna_dict, _ = create_dna_dict()
-        evaluator = Evaluator(X=None, y=None, column_names=None)
+        evaluator = Evaluator(X=np.array([]), y=None, column_names=None)
         evaluator.build_individual_binary_tree(dna_dict)
         tree = evaluator.tree
         expression = evaluator.extract_tree_expression(tree.node, index_mark = '_')
         self.assertIsNotNone(expression)
-        self.assertEqual(expression, '(_1_+_3_*_5_**(_2_-(_4_)/_6_))+')
+        self.assertEqual(expression, '(_1_+_3_*_5_^(_2_-(_4_)/_6_))+')
         
 
 def create_dna_dict():
@@ -57,6 +57,8 @@ def evaluator_fixture(mocker):
     X, y , column_names = create_data()
     yield Evaluator(X=X, y=y, column_names=column_names)
     #  Tear Down
+
+
 
 @pytest.mark.parametrize('input_num', [-1, 0, 1, 10])
 def test_get_string_data_column(input_num, eval_handler):

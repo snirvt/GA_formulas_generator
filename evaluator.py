@@ -5,7 +5,7 @@ import constants
 from individual import Individual
 from tree import Tree
 import utils
-
+import math 
 class Evaluator():
 
     def __init__(self, X, y, column_names):
@@ -15,6 +15,11 @@ class Evaluator():
         self.tree = Tree()
         self.expression_str = ''
 
+        self.preprocess_x()
+
+    def preprocess_x(self):
+        self.X = self.X.astype(complex)
+
     def evaluate_population(self, population):
         fitness_array = np.empty([len(population)])
         for i, individual in enumerate(population):
@@ -22,12 +27,23 @@ class Evaluator():
         return fitness_array
 
     def evaluate_individual(self, individual):
+        self.transalete_genotype(individual)
+        X = self.X ## for short string on eval
+        valid_math_expression = self.build_math_evaluation(self.expression_str)
+        # try:
+        y_pred = eval(valid_math_expression).real
+        y_pred = np.nan_to_num(y_pred) # replace nan values with 0
+        return utils.r2_score(self.y, y_pred)
+        # except: ## TODO change system division so division by 0 is 0
+        #     return -float('inf')
+        
+
+    def transalete_genotype(self, individual):
         self.build_individual_binary_tree(individual)
         self.expression_str = ''
         self.extract_tree_expression(self.tree.node, index_mark = '_')
         self.fix_expression()
-        X = self.X ## for short string on eval
-        return utils.r2_score(self.y, eval(self.build_math_evaluation(self.expression_str)))
+        return self.expression_str
 
     def build_individual_binary_tree(self, individual):
         merged_values = Individual.merge_dna_data(individual)
@@ -42,7 +58,6 @@ class Evaluator():
         
         if parentheses == 1:
             self.expression_str += '('
-
         self.expression_str += '{}{}{}'.format(index_mark, feature, index_mark)
         self.expression_str += utils.get_action(action)
 
@@ -53,8 +68,10 @@ class Evaluator():
             self.expression_str = self.expression_str[:-1] + ')' + self.expression_str[-1] ## put closing parentesis before action
         return self.expression_str
 
+
     def fix_expression(self):
         self.expression_str = self.expression_str[:-1] ## remove the last action
+        self.expression_str = self.expression_str.replace('^','**')
 
     
     def build_math_evaluation(self, expression):

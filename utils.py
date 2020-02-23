@@ -20,6 +20,6 @@ def get_action(action):
         1:'-',
         2:'*',
         3:'/',
-        4:'**',
+        4:'^',
     }
     return switcher.get(int(action))

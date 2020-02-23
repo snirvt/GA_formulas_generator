@@ -7,7 +7,7 @@ import constants
 ###################################
 
 class Individual():
-    def __init__(self, num_features, max_individual_size, num_actions = 6):
+    def __init__(self, num_features, max_individual_size, num_actions = 5):
         self.num_features = num_features
         self.max_individual_size = max_individual_size
         self.num_actions = num_actions

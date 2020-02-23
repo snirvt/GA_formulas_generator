@@ -15,7 +15,9 @@ class Mutation_Handler():
     def mutate(self, dna_dict):
         for key in dna_dict:
             if key == constants.DNA_SIZE_STR:
-                self.mutate_size(dna_dict)
+                mutation_chance = self.probability_handler.get_probability_dict()[key]
+                if np.random.rand() < mutation_chance:
+                    self.mutate_size(dna_dict)
                 continue
             self.apply_vector_mutation(dna_dict[key], key)
 

@@ -7,11 +7,10 @@ from unittest.mock import MagicMock
 
 ###################################
 from ga import GA
+from tests.test_common import create_data
 ###################################
 
 class Test_ga(unittest.TestCase):
-    
-
     def test_create_population(self):
         population_size = 10
         ga = create_ga_test(population_size = population_size)
@@ -21,9 +20,9 @@ class Test_ga(unittest.TestCase):
     def test_mutate_population(self):
         population_size = 10
         ga = create_ga_test(population_size = population_size)
-        ga.create_population(population_size=population_size)
+        ga.create_population(population_size = population_size)
         ga.mutate_population()
-        self.assertEqual(len(ga.get_population()),  population_size)
+        self.assertEqual(len(ga.get_population()), population_size)
 
 
 def create_ga_test(population_size = 10):
@@ -32,9 +31,5 @@ def create_ga_test(population_size = 10):
     return ga
 
 
-def create_data():
-    ## pattern is 1*2/3
-    X = sample_data = np.random.rand(100,3)
-    y = sample_data[:,0]*sample_data[:,1]/sample_data[:,2]
-    column_names = [1,2,3]
-    return X, y, column_names
+
+

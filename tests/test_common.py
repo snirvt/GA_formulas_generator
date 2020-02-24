@@ -1,6 +1,6 @@
 
 import numpy as np
-
+import constants
 
 
 def create_data():
@@ -13,15 +13,19 @@ def create_data():
 
 def create_simple_individual():
     dna_dict = {}
-    dna_dict['size'] = 3
-    dna_dict['feature_indices'] = [0,1,2]
-    dna_dict['weights'] = [0,1,2]
-    dna_dict['parentheses_binary_vec'] = [0,0,0]
-    dna_dict['actions'] = [2,3,2]
+    dna_dict[constants.DNA_SIZE_STR] = 3
+    dna_dict[constants.DNA_FEATURES_STR] = [0,1,2]
+    dna_dict[constants.DNA_WEIGHTS_STR] = [0,1,2]
+    dna_dict[constants.DNA_PARENTHESES_STR] = [0,0,0]
+    dna_dict[constants.DNA_ACTIONS_STR] = [2,3,2]
+    dna_dict[constants.DNA_WL_SCALAR] = [1,1,1]
     return dna_dict
 
-
-
+def create_simple_population():
+    population = []
+    for _ in range(3):
+        population.append(create_simple_individual())
+    return population
 
 
 

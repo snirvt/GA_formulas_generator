@@ -1,7 +1,10 @@
-# import numbers_generator as ng    # The code to test 
-import numbers_generator as ng
+import pytest
+import mock
 import unittest   # The test framework
 import numpy as np
+
+import numbers_generator as ng
+
 
 class Test_Number_Generator(unittest.TestCase):
 
@@ -36,5 +39,21 @@ class Test_Number_Generator(unittest.TestCase):
         self.assertTrue(np.all(vec_1>=0))
         self.assertTrue(np.all(vec_1<10))
 
-if __name__ == '__main__':
-    unittest.main()
+@pytest.mark.parametrize('size', [1, 25])
+def test_generate_binary_values(size):
+    result = ng.generate_n_binary_numbers(size = size)
+    assert(len(result) == size)
+    assert(check_if_binary(result))
+
+@pytest.mark.parametrize('mu', [1])
+@pytest.mark.parametrize('sigma', [0.5])
+@pytest.mark.parametrize('size', [1, 25])
+def test_generate_gaussian(mu, sigma, size):
+    result = ng.generate_gaussian(mu=mu, sigma=sigma, size = size)
+    assert(len(result) == size)
+
+def check_if_binary(iterator):
+    for value in iterator:
+        if value != 0 and value != 1:
+            return False
+    return True

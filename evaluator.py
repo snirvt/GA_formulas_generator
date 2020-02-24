@@ -1,24 +1,40 @@
 
 import numpy as np
+from multiprocessing import Pool, cpu_count
+import math 
 
 import constants
 from individual import Individual
 from tree import Tree
 import utils
-import math 
+from genom_transaltor import Genom_Translator
+
 class Evaluator():
 
     def __init__(self, X, y, column_names):
         self.X = X
         self.y = y
         self.column_names = column_names
-        self.tree = Tree()
-        self.expression_str = ''
-
         self.preprocess_x()
+        self.genom_transaltor = Genom_Translator(self.column_names)
 
     def preprocess_x(self):
         self.X = self.X.astype(complex)
+
+    def evaluate_population_paralal(self, population):
+        fitness_array = np.empty([len(population)])
+        p = Pool(constants.NUM_POOL)
+        paralal_input = zip(range(len(population)),population)
+        paralal_result = p.map(self.evaluate_individual_paralal, paralal_input)
+        p.close()
+        p.join()
+        for i, fitness in paralal_result:
+            fitness_array[i] = fitness
+        return fitness_array
+
+    def evaluate_individual_paralal(self, paralal_input):
+        i, individual = paralal_input
+        return i, self.evaluate_individual(individual)
 
     def evaluate_population(self, population):
         fitness_array = np.empty([len(population)])
@@ -27,53 +43,17 @@ class Evaluator():
         return fitness_array
 
     def evaluate_individual(self, individual):
-        self.transalete_genotype(individual)
+        # self.transalete_genotype(individual)
+        expression_str = self.genom_transaltor.get_raw_fenotype(individual)
         X = self.X ## for short string on eval
-        valid_math_expression = self.build_math_evaluation(self.expression_str)
+        valid_math_expression = self.build_math_evaluation(expression_str)
         # try:
         y_pred = eval(valid_math_expression).real
         y_pred = np.nan_to_num(y_pred) # replace nan values with 0
         return utils.r2_score(self.y, y_pred)
         # except: ## TODO change system division so division by 0 is 0
         #     return -float('inf')
-        
-
-    def transalete_genotype(self, individual):
-        self.build_individual_binary_tree(individual)
-        self.expression_str = ''
-        self.extract_tree_expression(self.tree.node, index_mark = '_')
-        self.fix_expression()
-        return self.expression_str
-
-    def build_individual_binary_tree(self, individual):
-        merged_values = Individual.merge_dna_data(individual)
-        self.tree.delete_tree()
-        for value in merged_values:
-            self.tree.insert(value)
-
-    def extract_tree_expression(self, node, index_mark = '_'):
-        if node == None or node.data == None:
-            return self.expression_str
-        feature, parentheses, action = Individual.get_all_merged_values(node.data)
-        
-        if parentheses == 1:
-            self.expression_str += '('
-        self.expression_str += '{}{}{}'.format(index_mark, feature, index_mark)
-        self.expression_str += utils.get_action(action)
-
-        self.expression_str = self.extract_tree_expression(node.left, index_mark)
-        self.expression_str = self.extract_tree_expression(node.right, index_mark)
-
-        if parentheses == 1:
-            self.expression_str = self.expression_str[:-1] + ')' + self.expression_str[-1] ## put closing parentesis before action
-        return self.expression_str
-
-
-    def fix_expression(self):
-        self.expression_str = self.expression_str[:-1] ## remove the last action
-        self.expression_str = self.expression_str.replace('^','**')
-
-    
+          
     def build_math_evaluation(self, expression):
         split_expression = expression.split('_')
         math_str = ''
@@ -83,7 +63,6 @@ class Evaluator():
             else:
                 math_str += split
         return math_str
-
 
     def get_string_data_column(self, column_number):
         return 'X[:,{}]'.format(column_number)

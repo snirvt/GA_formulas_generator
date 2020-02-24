@@ -1,8 +1,10 @@
 import numpy as np
+from multiprocessing import Pool, cpu_count
 
 ###################################
 from individual import Individual
 from mutation_handler import Mutation_Handler
+import constants
 ###################################
 
 """This class is responsible for creating the population and applying actions upon the individuals"""
@@ -25,6 +27,14 @@ class Population_Handler():
     def mutate_population(self):
         for individual in self.population:
             self.mh.mutate(individual)
+
+    def mutate_population_paralal(self):
+        p = Pool(constants.NUM_POOL)
+        paralal_input = list(self.population)
+        paralal_result = p.map(self.mh.mutate_paralal, paralal_input)
+        p.close()
+        p.join()
+        self.population = np.array(paralal_result)
 
     def cross_over_population(self):
         pass

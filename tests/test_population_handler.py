@@ -32,6 +32,13 @@ class Test_Population_Handler(unittest.TestCase):
         self.assertIsNotNone(ph.population)
         self.assertEqual(len(ph.population), population_size)
 
+    def test_mutate_population_paralal(self):
+        ph = create_test_population_handler()
+        population_size = 10
+        ph.create_population(population_size = population_size)
+        ph.mutate_population_paralal()
+        self.assertIsNotNone(ph.population)
+        self.assertEqual(len(ph.population), population_size)
 
 def create_test_population_handler(max_individual_size = 10, num_features = 10):
     probability_handler = Probability_Handler(max_feature_number = 10)

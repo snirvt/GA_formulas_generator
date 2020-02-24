@@ -10,51 +10,47 @@ from unittest.mock import MagicMock
 from mutation_handler import Mutation_Handler
 import numbers_generator as ng
 from probability_handler import Probability_Handler
+from tests.test_common import create_simple_individual
+import constants
 ###################################
 
 class Test_mutation_handler(unittest.TestCase):
     
-    def create_dna_dict(self):
-        dna_dict = {}
-        dna_dict['size'] = 3
-        dna_dict['feature_indices'] = [0,1,2]
-        dna_dict['weights'] = [0,0.1,0.2]
-        dna_dict['parentheses_binary_vec'] = [0,1,1]
-        dna_dict['actions'] = [0,1,2]
-        return dna_dict
+
 
     def test_remove_genotype_parts(self):
         mh = create_mutation_handler_test()
-        dna_dict = self.create_dna_dict()
+        dna_dict = create_simple_individual()
         mh.remove_genotype_parts(2,dna_dict)
-        self.assertTrue(dna_dict['size'] == 2)
-        self.assertTrue(len(dna_dict['feature_indices']) == 2)
-        self.assertTrue(len(dna_dict['weights']) == 2)
-        self.assertTrue(len(dna_dict['parentheses_binary_vec']) == 2)
-        self.assertTrue(len(dna_dict['actions']) == 2)
+        self.assertTrue(dna_dict[constants.DNA_SIZE_STR] == 2)
+        self.assertTrue(len(dna_dict[constants.DNA_FEATURES_STR]) == 2)
+        self.assertTrue(len(dna_dict[constants.DNA_WEIGHTS_STR]) == 2)
+        self.assertTrue(len(dna_dict[constants.DNA_ACTIONS_STR]) == 2)
+        self.assertTrue(len(dna_dict[constants.DNA_PARENTHESES_STR]) == 2)
+        self.assertTrue(len(dna_dict[constants.DNA_WL_SCALAR]) == 2)
 
 
     def test_add_genotype_parts(self):
         mh = create_mutation_handler_test()
-        dna_dict = self.create_dna_dict()
+        dna_dict = create_simple_individual()
         new_size = 5
         mh.add_genotype_parts(new_size,dna_dict)
-        self.assertTrue(dna_dict['size'] == new_size)
-        self.assertTrue(len(dna_dict['feature_indices']) == new_size)
-        self.assertTrue(len(dna_dict['weights']) == new_size)
-        self.assertTrue(len(dna_dict['parentheses_binary_vec']) == new_size)
-        self.assertTrue(len(dna_dict['actions']) == new_size)
+        self.assertTrue(dna_dict[constants.DNA_SIZE_STR] == new_size)
+        self.assertTrue(len(dna_dict[constants.DNA_FEATURES_STR]) == new_size)
+        self.assertTrue(len(dna_dict[constants.DNA_WEIGHTS_STR]) == new_size)
+        self.assertTrue(len(dna_dict[constants.DNA_PARENTHESES_STR]) == new_size)
+        self.assertTrue(len(dna_dict[constants.DNA_ACTIONS_STR]) == new_size)
 
     def test_insert_new_values_to_dna(self):
         mh = create_mutation_handler_test()
-        dna_dict = self.create_dna_dict()
+        dna_dict = create_simple_individual()
         new_size = 4
         mh.insert_new_values_to_dna(0,dna_dict)
-        self.assertTrue(dna_dict['size'] == new_size)
-        self.assertTrue(len(dna_dict['feature_indices']) == new_size)
-        self.assertTrue(len(dna_dict['weights']) == new_size)
-        self.assertTrue(len(dna_dict['parentheses_binary_vec']) == new_size)
-        self.assertTrue(len(dna_dict['actions']) == new_size)
+        self.assertTrue(dna_dict[constants.DNA_SIZE_STR] == new_size)
+        self.assertTrue(len(dna_dict[constants.DNA_FEATURES_STR]) == new_size)
+        self.assertTrue(len(dna_dict[constants.DNA_WEIGHTS_STR]) == new_size)
+        self.assertTrue(len(dna_dict[constants.DNA_PARENTHESES_STR]) == new_size)
+        self.assertTrue(len(dna_dict[constants.DNA_ACTIONS_STR]) == new_size)
 
     def test_vector_mutation(self):
         mh = create_mutation_handler_test()
@@ -64,13 +60,13 @@ class Test_mutation_handler(unittest.TestCase):
 
     def test_apply_vector_mutation(self):
         mh = create_mutation_handler_test()
-        dna_dict = self.create_dna_dict()
-        mh.apply_vector_mutation(dna_dict['weights'], 'weights')
-        self.assertEqual(len(dna_dict['weights']), 3)
+        dna_dict = create_simple_individual()
+        mh.apply_vector_mutation(dna_dict[constants.DNA_WEIGHTS_STR], constants.DNA_WEIGHTS_STR)
+        self.assertEqual(len(dna_dict[constants.DNA_WEIGHTS_STR]), 3)
 
     def test_mutate(self):
         mh = create_mutation_handler_test()
-        dna_dict = self.create_dna_dict()
+        dna_dict = create_simple_individual()
         mh.mutate(dna_dict)
         self.assertIsNotNone(dna_dict)
 
@@ -92,11 +88,11 @@ def mutation_handler_fixture(mocker):
 def dict_fixture(mocker):
     #  Bring up
     dna_dict = {}
-    dna_dict['size'] = 3
-    dna_dict['feature_indices'] = [0,1,2]
-    dna_dict['weights'] = [0,1,2]
-    dna_dict['parentheses_binary_vec'] = [0,1,1]
-    dna_dict['actions'] = [0,1,2]
+    dna_dict[constants.DNA_SIZE_STR] = 3
+    dna_dict[constants.DNA_FEATURES_STR] = [0,1,2]
+    dna_dict[constants.DNA_WEIGHTS_STR] = [0,1,2]
+    dna_dict[constants.DNA_PARENTHESES_STR] = [0,1,1]
+    dna_dict[constants.DNA_ACTIONS_STR] = [0,1,2]
 
     yield dna_dict
     #  Tear Down
@@ -109,7 +105,7 @@ def test_mutate_size(mocked_ng,val,state, gaus_int, dna_dict_size, mut_handler, 
     mocked_ng.generate_gaussian_integers.return_value = gaus_int
     mut_handler.remove_genotype_parts = mocker.MagicMock(return_value=None)
     mut_handler.add_genotype_parts = mocker.MagicMock(return_value=None)
-    mut_handler.mutate_size({"size": dna_dict_size})
+    mut_handler.mutate_size({constants.DNA_SIZE_STR: dna_dict_size})
     
     add_called = 0 ## how many times should the method be called
     remove_called = 0
@@ -132,4 +128,4 @@ def test_mutate_size(mocked_ng,val,state, gaus_int, dna_dict_size, mut_handler, 
     # mut_handler.remove_genotype_parts = mocker.MagicMock()
     # mut_handler.add_genotype_parts = mocker.MagicMock()
     # mut_handler.remove_genotype_parts(2,dna_dict)
-    # assert (dna_dict['size'] == 3)
+    # assert (dna_dict[constants.DNA_SIZE_STR] == 3)

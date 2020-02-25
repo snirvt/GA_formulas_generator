@@ -19,7 +19,8 @@ class Individual():
         self.parentheses_binary_vec = fg.create_parentheses_vector(size = self.individual_size )
         self.actions = fg.create_action_vector(size = self.individual_size)
         self.wl_scalars = fg.create_wl_scalars_vector(mu=1, sigma = 0.5, size = self.individual_size)
-        self.wl_powers = fg.create_wl_scalars_vector(mu=1, sigma = 0.5, size = self.individual_size)
+        self.wl_powers = fg.create_wl_powers_vector(mu=1, sigma = 0.5, size = self.individual_size)
+        self.parentheses_bias = fg.create_parentheses_bias_vector(mu=0, sigma = 0.5, size = self.individual_size)
         return self.create_dna_dictionary()
 
     def create_dna_dictionary(self):
@@ -31,6 +32,7 @@ class Individual():
         self.dna_dict[constants.DNA_ACTIONS_STR] = self.actions
         self.dna_dict[constants.DNA_WL_SCALAR] = self.wl_scalars
         self.dna_dict[constants.DNA_WL_POWER] = self.wl_powers
+        self.dna_dict[constants.DNA_PARENTHESES_BIAS] = self.parentheses_bias
         return self.dna_dict
     
     @staticmethod
@@ -41,7 +43,8 @@ class Individual():
         actions_values = dna_dict[constants.DNA_ACTIONS_STR]
         wl_scalars = dna_dict[constants.DNA_WL_SCALAR]
         wl_powers = dna_dict[constants.DNA_WL_POWER]
-        return list(zip(tree_values, feature_values, parentheses_values, actions_values, wl_scalars, wl_powers))
+        parentheses_bias = dna_dict[constants.DNA_PARENTHESES_BIAS]
+        return list(zip(tree_values, feature_values, parentheses_values, actions_values, wl_scalars, wl_powers, parentheses_bias))
     
     @staticmethod
     def get_merged_feature_values(merged):
@@ -64,8 +67,12 @@ class Individual():
         return merged[5]
 
     @staticmethod
+    def get_merged_parentheses_bias(merged):
+        return merged[6]
+
+    @staticmethod
     def get_all_merged_values(merged):
-        return merged[1], merged[2] ,merged[3], merged[4], merged[5]
+        return merged[1], merged[2] ,merged[3], merged[4], merged[5], merged[6]
 
         
 

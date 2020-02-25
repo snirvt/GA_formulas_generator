@@ -29,7 +29,7 @@ class Test_Genom_Transaltor(unittest.TestCase):
         tree = genom_translator.tree
         expression = genom_translator.extract_tree_expression(tree.node, index_mark = '_')
         self.assertIsNotNone(expression)
-        self.assertEqual(expression, '((1*_1_**1)+(1*_3_**1)*(1*_5_**1)^((1*_2_**1)-((1*_4_**1))/(1*_6_**1)))+')
+        self.assertEqual(expression, '((1*_1_**1)+(1*_3_**1)*(1*_5_**1)^((1*_2_**1)-((1*_4_**1)+0)/(1*_6_**1)+0)+0)+')
 
 def create_dna_dict():
     dna_dict = {}
@@ -40,7 +40,8 @@ def create_dna_dict():
     dna_dict[constants.DNA_ACTIONS_STR] = [0,1,2,3,4,0]
     dna_dict[constants.DNA_WL_SCALAR] = [1,1,1,1,1,1]
     dna_dict[constants.DNA_WL_POWER] = [1,1,1,1,1,1]
-    pre_order_correct = [(3, 1, 1, 0,1,1), (1, 3, 0, 2,1,1), (2, 5, 0, 4,1,1), (5, 2, 1, 1,1,1), (4, 4, 1, 3,1,1), (6, 6, 0, 0,1,1)]
+    dna_dict[constants.DNA_PARENTHESES_BIAS] = [0,0,0,0,0,0]
+    pre_order_correct = [(3,1,1,0,1,1,0), (1,3,0,2,1,1,0), (2,5,0,4,1,1,0), (5,2,1,1,1,1,0), (4,4,1,3,1,1,0), (6,6,0,0,1,1,0)]
     return dna_dict, pre_order_correct
 
 @pytest.fixture(name="translator_handler")

@@ -40,8 +40,9 @@ class Mutation_Handler():
             mutator_function = lambda : fg.sample_wl_scalars(mu = 1, sigma = 0.5)
         if key == constants.DNA_WL_POWER:
             mutator_function = lambda : fg.sample_wl_powers(mu = 1, sigma = 0.5)
+        if key == constants.DNA_PARENTHESES_BIAS:
+            mutator_function = lambda : fg.sample_parentheses_bias(mu = 0, sigma = 0.5)
     
-
         mutation_chance = self.probability_handler.get_probability_dict()[key]
         self.vector_mutation(gen, mutation_chance, mutator_function)
 
@@ -64,7 +65,6 @@ class Mutation_Handler():
     def remove_genotype_parts(self, new_size, dna_dict):
         while dna_dict[constants.DNA_SIZE_STR] > new_size and dna_dict[constants.DNA_SIZE_STR] > 1:
             index_to_remove = ng.generate_n_uniform_random_integers(min_val = 0 , max_val = dna_dict[constants.DNA_SIZE_STR] , size = 1 )[0]
-            
             for key in dna_dict:
                 if key == constants.DNA_SIZE_STR:
                     continue
@@ -79,11 +79,11 @@ class Mutation_Handler():
     def insert_new_values_to_dna(self, index, dna_dict):
         dna_dict[constants.DNA_FEATURES_STR].insert(index , fg.sample_feature_index(num_features = self.probability_handler.max_feature_number))
         dna_dict[constants.DNA_WEIGHTS_STR].insert(index, fg.sample_weight())
-        dna_dict[constants.DNA_PARENTHESES_STR].insert(index, ng.generate_n_binary_numbers(size=1)[0])
+        dna_dict[constants.DNA_PARENTHESES_STR].insert(index, fg.sample_parentheses())
         dna_dict[constants.DNA_ACTIONS_STR].insert(index, fg.sample_action())
         dna_dict[constants.DNA_WL_SCALAR].insert(index, fg.sample_wl_scalars(mu=1, sigma=0.5))
         dna_dict[constants.DNA_WL_POWER].insert(index, fg.sample_wl_powers(mu=1, sigma=0.5))
-
+        dna_dict[constants.DNA_PARENTHESES_BIAS].insert(index, fg.sample_parentheses_bias(mu=0, sigma=0.5))
         dna_dict[constants.DNA_SIZE_STR] += 1
 
 

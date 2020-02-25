@@ -44,3 +44,9 @@ def create_wl_powers_vector(mu, sigma, size):
 
 def sample_wl_powers(mu, sigma):
     return ng.generate_gaussian(mu=mu, sigma = sigma, size = 1)[0]
+
+def create_parentheses_bias_vector(mu, sigma, size):
+    return ng.generate_gaussian(mu=mu, sigma = sigma, size = size)
+
+def sample_parentheses_bias(mu, sigma):
+    return ng.generate_gaussian(mu=mu, sigma = sigma, size = 1)[0]

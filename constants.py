@@ -14,6 +14,7 @@ DNA_PARENTHESES_STR = 'parentheses_binary_vec'
 DNA_ACTIONS_STR = 'actions'
 DNA_WL_SCALAR = 'wl_scalar'
 DNA_WL_POWER = 'wl_power'
+DNA_PARENTHESES_BIAS = 'parentheses_bias'
 
 #### changable stats ####
 NUM_OFFSPRINGS_PER_PARENT = 5

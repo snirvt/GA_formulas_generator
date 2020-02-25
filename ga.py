@@ -79,6 +79,7 @@ class GA():
             self.create_new_generation(parents_front = parents_front, num_parents = num_parents)
             self.mutate_population()
             self.no_imrovment_counter += 1
+        print('best result: {}, fenotype: {}'.format(self.top_global_score, self.top_fenotype))
             
     def fitness(self):
         population = self.get_population()

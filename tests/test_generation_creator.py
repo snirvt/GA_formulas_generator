@@ -22,18 +22,3 @@ def mating_fixture(mocker):
 def test_replicate_parents(parents_front, num_parents, generation_handler):
     replicated_parents = generation_handler.replicate_parents(parents_front = parents_front, num_parents = num_parents)
     assert(np.all(replicated_parents == np.array(['g', 'f', 'b', 'e', 'g', 'f', 'b', 'e'])))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -20,9 +20,10 @@ class GA():
         self.y = y
         self.column_names = column_names
         self.paralal = parlal
-        self.top_score = float('-inf')
+        self.top_global_score = float('-inf')
         # self.top_individual = None
         self.top_fenotype = None
+        self.no_imrovment_counter = 0
 
         self.probability_handler = None
         self.population_handler = None
@@ -49,26 +50,35 @@ class GA():
         return self.population_handler.get_population()
 
     def save_results(self,fenotype, score):
-        if score > self.top_score:
+        if score > self.top_global_score:
             print('new best:')
-            self.top_score = score
+            self.top_global_score = score
             self.top_fenotype = copy.deepcopy(fenotype)
             df = pd.DataFrame([fenotype, score])
             df = df.T
             df.columns = ['formula', 'r2_score']
-            self.result_handler.save_to_file(path = 'results/results.xlsx', sheetName = 'results',df = df.T, append = True, header=True)
-    
+            self.result_handler.save_to_file(path = 'results/results.xlsx', sheetName = 'results',df = df, append = True, header=True)
+
     def natural_selection(self): # fitness -> mating_pool -> create_new_generation -> mutate -> crossover
-        self.create_population(population_size = 1000)
         for _ in range(100):
+            if self.no_imrovment_counter % 10 == 0:
+                self.create_population(population_size = 1000)
+                print('---------restart population---------')
+                self.no_imrovment_counter = 1
+                prev_top_score = float('-inf')
             fitness_vec = self.fitness()
             fittest_individual = self.get_population()[np.argmax(fitness_vec)]
             best_generation_fenotype = self.genom_translator.translate_genotype(fittest_individual)
-            self.save_results(best_generation_fenotype, fitness_vec.max())
+            fittest_generation_score = fitness_vec.max()
+            self.save_results(best_generation_fenotype, fittest_generation_score)
+            if prev_top_score < fittest_generation_score:
+                prev_top_score = fittest_generation_score
+                self.no_imrovment_counter -= 1
             print('best of generation: {}, fenotype: {}'.format(np.round(np.max(fitness_vec),3), best_generation_fenotype))
             parents_front, num_parents = self.mating_pool(fitness_vec = fitness_vec)
             self.create_new_generation(parents_front = parents_front, num_parents = num_parents)
             self.mutate_population()
+            self.no_imrovment_counter += 1
             
     def fitness(self):
         population = self.get_population()
@@ -77,17 +87,13 @@ class GA():
         return self.evaluator.evaluate_population(population)
 
     def mating_pool(self, fitness_vec):
+        # TODO paralal
         population = self.get_population()
-        # if self.paralal:
-        #     parents_front, num_parents = self.mating_handler.choose_parents_paralal(population, fitness_vec)
-        # else:
         parents_front, num_parents = self.mating_handler.choose_parents(population, fitness_vec)
         return parents_front, num_parents
         
     def create_new_generation(self, parents_front, num_parents):
-        # if self.paralal:
-        #     new_generation = self.generation_creator.replicate_parents_paralal(parents_front = parents_front, num_parents = num_parents)
-        # else:
+        # TODO paralal
         new_generation = self.generation_creator.replicate_parents(parents_front = parents_front, num_parents = num_parents)
         self.population_handler.set_population(new_generation = new_generation)
 

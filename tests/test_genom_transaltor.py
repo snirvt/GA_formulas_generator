@@ -29,17 +29,18 @@ class Test_Genom_Transaltor(unittest.TestCase):
         tree = genom_translator.tree
         expression = genom_translator.extract_tree_expression(tree.node, index_mark = '_')
         self.assertIsNotNone(expression)
-        self.assertEqual(expression, '((1*_1_)+(1*_3_)*(1*_5_)^((1*_2_)-((1*_4_))/(1*_6_)))+')
+        self.assertEqual(expression, '((1*_1_**1)+(1*_3_**1)*(1*_5_**1)^((1*_2_**1)-((1*_4_**1))/(1*_6_**1)))+')
 
 def create_dna_dict():
     dna_dict = {}
-    dna_dict['size'] = 6
-    dna_dict['feature_indices'] = [1,2,3,4,5,6]
-    dna_dict['weights'] = [3,5,1,4,2,6]
-    dna_dict['parentheses_binary_vec'] = [1,1,0,1,0,0]
-    dna_dict['actions'] = [0,1,2,3,4,0]
-    dna_dict['wl_scalar'] = [1,1,1,1,1,1]
-    pre_order_correct = [(3, 1, 1, 0,1), (1, 3, 0, 2,1), (2, 5, 0, 4,1), (5, 2, 1, 1,1), (4, 4, 1, 3,1), (6, 6, 0, 0,1)]
+    dna_dict[constants.DNA_SIZE_STR] = 6
+    dna_dict[constants.DNA_FEATURES_STR] = [1,2,3,4,5,6]
+    dna_dict[constants.DNA_WEIGHTS_STR] = [3,5,1,4,2,6]
+    dna_dict[constants.DNA_PARENTHESES_STR] = [1,1,0,1,0,0]
+    dna_dict[constants.DNA_ACTIONS_STR] = [0,1,2,3,4,0]
+    dna_dict[constants.DNA_WL_SCALAR] = [1,1,1,1,1,1]
+    dna_dict[constants.DNA_WL_POWER] = [1,1,1,1,1,1]
+    pre_order_correct = [(3, 1, 1, 0,1,1), (1, 3, 0, 2,1,1), (2, 5, 0, 4,1,1), (5, 2, 1, 1,1,1), (4, 4, 1, 3,1,1), (6, 6, 0, 0,1,1)]
     return dna_dict, pre_order_correct
 
 @pytest.fixture(name="translator_handler")

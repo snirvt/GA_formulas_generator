@@ -13,6 +13,7 @@ DNA_FEATURES_STR = 'feature_indices'
 DNA_PARENTHESES_STR = 'parentheses_binary_vec'
 DNA_ACTIONS_STR = 'actions'
 DNA_WL_SCALAR = 'wl_scalar'
+DNA_WL_POWER = 'wl_power'
 
 #### changable stats ####
 NUM_OFFSPRINGS_PER_PARENT = 5

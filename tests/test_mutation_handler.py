@@ -98,11 +98,10 @@ def dict_fixture(mocker):
     #  Tear Down
  
 @pytest.mark.parametrize('dna_dict_size', [5,6])
-@pytest.mark.parametrize("gaus_int", [[5], [7]])
-@pytest.mark.parametrize("val,state", [(5,True),(7,False)])
-@mock.patch("mutation_handler.ng", autospec=True)
-def test_mutate_size(mocked_ng,val,state, gaus_int, dna_dict_size, mut_handler, mocker):
-    mocked_ng.generate_gaussian_integers.return_value = gaus_int
+@pytest.mark.parametrize("gaus_int", [5, 7])
+@mock.patch("mutation_handler.fg", autospec=True)
+def test_mutate_size(mocked_fg, gaus_int, dna_dict_size, mut_handler, mocker):
+    mocked_fg.sample_size.return_value = gaus_int
     mut_handler.remove_genotype_parts = mocker.MagicMock(return_value=None)
     mut_handler.add_genotype_parts = mocker.MagicMock(return_value=None)
     mut_handler.mutate_size({constants.DNA_SIZE_STR: dna_dict_size})
@@ -110,10 +109,10 @@ def test_mutate_size(mocked_ng,val,state, gaus_int, dna_dict_size, mut_handler, 
     add_called = 0 ## how many times should the method be called
     remove_called = 0
 
-    if (gaus_int[0] < dna_dict_size):
+    if (gaus_int < dna_dict_size):
         remove_called = 1
 
-    if (gaus_int[0] > dna_dict_size):
+    if (gaus_int > dna_dict_size):
         add_called = 1
 
     assert(mut_handler.add_genotype_parts.call_count == add_called)

@@ -19,6 +19,7 @@ def create_simple_individual():
     dna_dict[constants.DNA_PARENTHESES_STR] = [0,0,0]
     dna_dict[constants.DNA_ACTIONS_STR] = [2,3,2]
     dna_dict[constants.DNA_WL_SCALAR] = [1,1,1]
+    dna_dict[constants.DNA_WL_POWER] = [1,1,1]
     return dna_dict
 
 def create_simple_population():

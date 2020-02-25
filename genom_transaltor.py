@@ -33,12 +33,13 @@ class Genom_Translator():
     def extract_tree_expression(self, node, index_mark = '_'):
         if node == None or node.data == None:
             return self.expression_str
-        feature, parentheses, action, wl_scalar = Individual.get_all_merged_values(node.data)
+        feature, parentheses, action, wl_scalar, wl_power = Individual.get_all_merged_values(node.data)
         
         if parentheses == 1:
             self.expression_str += '('
         self.expression_str += '({}'.format(wl_scalar) + '*' ## add wl scalar
         self.expression_str += '{}{}{}'.format(index_mark, feature, index_mark)
+        self.expression_str += '**{}'.format(wl_power)
         self.expression_str += ')'
         self.expression_str += utils.get_action(action)
 

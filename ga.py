@@ -73,7 +73,7 @@ class GA():
             self.save_results(best_generation_fenotype, fittest_generation_score)
             if prev_top_score < fittest_generation_score:
                 prev_top_score = fittest_generation_score
-                self.no_imrovment_counter -= 1
+                self.no_imrovment_counter = 1
             print('best of generation: {}, fenotype: {}'.format(np.round(np.max(fitness_vec),3), best_generation_fenotype))
             parents_front, num_parents = self.mating_pool(fitness_vec = fitness_vec)
             self.create_new_generation(parents_front = parents_front, num_parents = num_parents)

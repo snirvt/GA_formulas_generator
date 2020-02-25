@@ -25,7 +25,7 @@ class Population_Handler():
             self.population[i] = self.create_individual()
 
     def mutate_population(self):
-        for individual in self.population:
+        for individual in self.population[1:]: ## dont mutate the top best
             self.mh.mutate(individual)
 
     def mutate_population_paralal(self):

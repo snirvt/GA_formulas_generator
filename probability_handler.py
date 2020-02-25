@@ -15,6 +15,7 @@ class Probability_Handler():
         self.prob_dict[constants.DNA_PARENTHESES_STR] = chance
         self.prob_dict[constants.DNA_ACTIONS_STR] = chance
         self.prob_dict[constants.DNA_WL_SCALAR] = chance
+        self.prob_dict[constants.DNA_WL_POWER] = chance
 
     def set_ptobability(self, prob_dict):
         self.prob_dict = prob_dict

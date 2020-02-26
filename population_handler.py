@@ -5,6 +5,7 @@ from multiprocessing import Pool, cpu_count
 from individual import Individual
 from mutation_handler import Mutation_Handler
 import constants
+from values_handler import Values_Handler
 ###################################
 
 """This class is responsible for creating the population and applying actions upon the individuals"""
@@ -13,8 +14,9 @@ class Population_Handler():
         self.probability_handler = probability_handler
         self.max_individual_size = max_individual_size
         self.population = []
-        self.individual = Individual(self.probability_handler.max_feature_number, self.max_individual_size)
-        self.mh = Mutation_Handler(self.probability_handler)
+        self.values_handler = Values_Handler(probability_handler)
+        self.individual = Individual(self.probability_handler.max_feature_number, self.max_individual_size, self.values_handler)
+        self.mh = Mutation_Handler(self.probability_handler, self.values_handler)
         
     def create_individual(self):
         return self.individual.be_born()

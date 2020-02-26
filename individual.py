@@ -4,24 +4,36 @@ import random
 import numbers_generator as ng
 import constants
 import features_generator as fg
+from values_handler import Values_Handler
 ###################################
 
 class Individual():
-    def __init__(self, num_features, max_individual_size, num_actions = 5):
+    def __init__(self, num_features, max_individual_size, values_handler):
         self.num_features = num_features
         self.max_individual_size = max_individual_size
-        self.num_actions = num_actions
-        
+        self.vh = values_handler
+
     def be_born(self):
-        self.individual_size = fg.create_size_feature()
-        self.feature_indices = fg.create_feature_index_vector(self.num_features, self.individual_size)
-        self.weights = fg.create_weight_vector(self.individual_size)
-        self.parentheses_binary_vec = fg.create_parentheses_vector(size = self.individual_size )
-        self.actions = fg.create_action_vector(size = self.individual_size)
-        self.wl_scalars = fg.create_wl_scalars_vector(mu=1, sigma = 0.5, size = self.individual_size)
-        self.wl_powers = fg.create_wl_powers_vector(mu=1, sigma = 0.5, size = self.individual_size)
-        self.parentheses_bias = fg.create_parentheses_bias_vector(mu=0, sigma = 0.5, size = self.individual_size)
+        self.individual_size =  self.vh.create_scalar_values(key = constants.DNA_SIZE_STR)
+        self.feature_indices = self.vh.create_vector_values(key = constants.DNA_FEATURES_STR, size = self.individual_size)
+        self.weights = self.vh.create_vector_values(key = constants.DNA_WEIGHTS_STR, size = self.individual_size)
+        self.parentheses_binary_vec = self.vh.create_vector_values(key = constants.DNA_PARENTHESES_STR, size = self.individual_size)
+        self.actions = self.vh.create_vector_values(key = constants.DNA_ACTIONS_STR, size = self.individual_size)
+        self.wl_scalars = self.vh.create_vector_values(key = constants.DNA_WL_SCALAR, size = self.individual_size)
+        self.wl_powers = self.vh.create_vector_values(key = constants.DNA_WL_POWER, size = self.individual_size)
+        self.parentheses_bias = self.vh.create_vector_values(key = constants.DNA_PARENTHESES_BIAS, size = self.individual_size)
         return self.create_dna_dictionary()
+
+    # def be_born(self):
+    #     self.individual_size = fg.create_size_feature()
+    #     self.feature_indices = fg.create_feature_index_vector(self.num_features, self.individual_size)
+    #     self.weights = fg.create_weight_vector(self.individual_size)
+    #     self.parentheses_binary_vec = fg.create_parentheses_vector(size = self.individual_size )
+    #     self.actions = fg.create_action_vector(size = self.individual_size)
+    #     self.wl_scalars = fg.create_wl_scalars_vector(mu=1, sigma = 0.5, size = self.individual_size)
+    #     self.wl_powers = fg.create_wl_powers_vector(mu=1, sigma = 0.5, size = self.individual_size)
+    #     self.parentheses_bias = fg.create_parentheses_bias_vector(mu=0, sigma = 0.5, size = self.individual_size)
+    #     return self.create_dna_dictionary()
 
     def create_dna_dictionary(self):
         self.dna_dict = {}

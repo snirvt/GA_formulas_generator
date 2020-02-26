@@ -5,13 +5,12 @@ import numpy as np
 import constants
 import numbers_generator as ng
 import utils
-import features_generator as fg
 ##################################
 
 class Mutation_Handler():
-
-    def __init__(self, probability_handler):
+    def __init__(self, probability_handler, values_handler):
         self.probability_handler = probability_handler
+        self.vh = values_handler
 
     def mutate_paralal(self, dna_dict):
         self.mutate(dna_dict)
@@ -19,42 +18,23 @@ class Mutation_Handler():
 
     def mutate(self, dna_dict):
         for key in dna_dict:
+            mutation_chance = self.probability_handler.get_probability_dict()[key]
             if key == constants.DNA_SIZE_STR:
-                mutation_chance = self.probability_handler.get_probability_dict()[key]
-                if np.random.rand() < mutation_chance:
-                    self.mutate_size(dna_dict)
+                self.mutate_size(dna_dict, mutation_chance)
                 continue
-            self.apply_vector_mutation(dna_dict[key], key)
+            self.vector_mutation(dna_dict, key, mutation_chance)
 
-    def apply_vector_mutation(self, gen, key): #todo create switch case
-        mutator_function = []
-        if key == constants.DNA_PARENTHESES_STR:
-            mutator_function = lambda : fg.sample_parentheses()
-        if key == constants.DNA_WEIGHTS_STR:
-            mutator_function = lambda : fg.sample_weight()
-        if key == constants.DNA_ACTIONS_STR:
-            mutator_function = lambda : fg.sample_action()
-        if key == constants.DNA_FEATURES_STR:
-            mutator_function = lambda : fg.sample_feature_index(num_features=self.probability_handler.max_feature_number)
-        if key == constants.DNA_WL_SCALAR:
-            mutator_function = lambda : fg.sample_wl_scalars(mu = 1, sigma = 0.5)
-        if key == constants.DNA_WL_POWER:
-            mutator_function = lambda : fg.sample_wl_powers(mu = 1, sigma = 0.5)
-        if key == constants.DNA_PARENTHESES_BIAS:
-            mutator_function = lambda : fg.sample_parentheses_bias(mu = 0, sigma = 0.5)
-    
-        mutation_chance = self.probability_handler.get_probability_dict()[key]
-        self.vector_mutation(gen, mutation_chance, mutator_function)
-
-
-    def vector_mutation(self, gen, mutation_chance, mutator_function):
+    def vector_mutation(self, dna_dict, key, mutation_chance):
+        gen = dna_dict[key]
         for i in range(len(gen)):
             if np.random.rand() < mutation_chance:
-                gen[i] = mutator_function()
+                gen[i] = self.vh.create_scalar_values(key = key, previous_value = gen[i])
 
-    def mutate_size(self, dna_dict):
+    def mutate_size(self, dna_dict, mutation_chance):
+        if np.random.rand() > mutation_chance:
+            return
         individual_size = dna_dict[constants.DNA_SIZE_STR]
-        new_size = fg.sample_size(mu = individual_size)
+        new_size = self.vh.create_scalar_values(key = constants.DNA_SIZE_STR, previous_value = individual_size)
         if new_size == individual_size:
             return
         if new_size < individual_size:
@@ -77,13 +57,10 @@ class Mutation_Handler():
             self.insert_new_values_to_dna(index_to_add, dna_dict)
 
     def insert_new_values_to_dna(self, index, dna_dict):
-        dna_dict[constants.DNA_FEATURES_STR].insert(index , fg.sample_feature_index(num_features = self.probability_handler.max_feature_number))
-        dna_dict[constants.DNA_WEIGHTS_STR].insert(index, fg.sample_weight())
-        dna_dict[constants.DNA_PARENTHESES_STR].insert(index, fg.sample_parentheses())
-        dna_dict[constants.DNA_ACTIONS_STR].insert(index, fg.sample_action())
-        dna_dict[constants.DNA_WL_SCALAR].insert(index, fg.sample_wl_scalars(mu=1, sigma=0.5))
-        dna_dict[constants.DNA_WL_POWER].insert(index, fg.sample_wl_powers(mu=1, sigma=0.5))
-        dna_dict[constants.DNA_PARENTHESES_BIAS].insert(index, fg.sample_parentheses_bias(mu=0, sigma=0.5))
+        for key in dna_dict:
+            if key == constants.DNA_SIZE_STR:
+                continue
+            dna_dict[key].insert(index,  self.vh.create_scalar_values(key = key))
         dna_dict[constants.DNA_SIZE_STR] += 1
 
 

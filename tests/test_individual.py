@@ -8,6 +8,7 @@ import individual    # The code to test
 from individual import Individual
 from probability_handler import Probability_Handler
 import constants
+from values_handler import Values_Handler
 ###################################
 
 class Test_Individual(unittest.TestCase):
@@ -15,9 +16,9 @@ class Test_Individual(unittest.TestCase):
     def test_be_born(self):
         num_features = 10
         max_individual_size = 5
-        num_actions = 6 
+        values_handler = Values_Handler(Probability_Handler(num_features))
 
-        factory = Individual(num_features = num_features, max_individual_size = max_individual_size, num_actions = num_actions)
+        factory = Individual(num_features = num_features, max_individual_size = max_individual_size, values_handler=values_handler)
         dna_dict = factory.be_born()
 
         size_individual = dna_dict[constants.DNA_SIZE_STR]
@@ -40,7 +41,7 @@ class Test_Individual(unittest.TestCase):
         size_action_vector = len(dna_dict[constants.DNA_ACTIONS_STR])
         self.assertTrue(1 <= size_action_vector <= max_individual_size)
         self.assertTrue(np.all(0 <= np.array(dna_dict[constants.DNA_ACTIONS_STR])))
-        self.assertTrue(np.all(np.array(dna_dict[constants.DNA_ACTIONS_STR]) < num_actions))
+        self.assertTrue(np.all(np.array(dna_dict[constants.DNA_ACTIONS_STR]) < constants.MAX_SIZE_INDIVIDUAL))
 
 
 if __name__ == '__main__':

@@ -7,7 +7,8 @@ class Probability_Handler():
     def __init__(self, max_feature_number):
         self.prob_dict = {}
         self.max_feature_number = max_feature_number
-
+        self.independent_update_chance = 0.5
+        
     def create_uniform_probability(self, chance = 0.2):
         self.prob_dict[constants.DNA_SIZE_STR] = chance
         self.prob_dict[constants.DNA_FEATURES_STR] = chance
@@ -25,8 +26,6 @@ class Probability_Handler():
         if len(self.prob_dict) == 0:
             self.create_uniform_probability()
         return self.prob_dict
-
-
 
 
 

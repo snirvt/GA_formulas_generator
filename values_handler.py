@@ -24,12 +24,14 @@ class Values_Handler():
         self.dict[constants.DNA_WL_SCALAR + 'input'] = [1, 0.5]
         self.dict[constants.DNA_WL_POWER + 'input'] = [1, 0.5]
         self.dict[constants.DNA_PARENTHESES_BIAS + 'input'] = [0, 0.5]
-
+        self.dict[constants.DNA_WL_BIAS + 'input'] = [0, 0.5]
+        
         self.dict['normaly distributed'] = []
         self.dict['normaly distributed'].append(constants.DNA_SIZE_STR)
         self.dict['normaly distributed'].append(constants.DNA_WL_SCALAR)
         self.dict['normaly distributed'].append(constants.DNA_WL_POWER)
         self.dict['normaly distributed'].append(constants.DNA_PARENTHESES_BIAS)
+        self.dict['normaly distributed'].append(constants.DNA_WL_BIAS)
 
     def setup_functions(self):
         self.dict[constants.DNA_SIZE_STR] = lambda list_input: ng.generate_gaussian_integers(list_input[0], list_input[1], list_input[2], list_input[3], list_input[4])
@@ -42,19 +44,19 @@ class Values_Handler():
         self.dict[constants.DNA_PARENTHESES_BIAS] = lambda list_input: ng.generate_gaussian(list_input[0], list_input[1], list_input[2])
         self.dict[constants.DNA_WL_ACTIVATION] = lambda list_input: ng.generate_n_uniform_random_integers(list_input[0], list_input[1], list_input[2])
         self.dict[constants.DNA_PARENTHESES_ACTIVATION] = lambda list_input: ng.generate_n_uniform_random_integers(list_input[0], list_input[1], list_input[2])
+        self.dict[constants.DNA_WL_BIAS] = lambda list_input: ng.generate_gaussian(list_input[0], list_input[1], list_input[2])
 
     def get_dict(self):
         return self.dict
 
     def create_vector_values(self, key, size):
-        tuple_input = self.dict[key + 'input'] + [size]
-        return self.dict[key](tuple_input)
+        list_input = self.dict[key + 'input'] + [size]
+        return self.dict[key](list_input)
 
     def create_scalar_values(self, key, previous_value = None):
-        tuple_input = self.dict[key + 'input'] + [1]
-        
+        list_input = self.dict[key + 'input'] + [1]
         if key in self.dict['normaly distributed'] and previous_value != None:
             if np.random.rand() < self.probability_handler.independent_update_chance:
-                tuple_input[0] = previous_value
+                list_input[0] = previous_value
             
-        return self.dict[key](tuple_input)[0]
+        return self.dict[key](list_input)[0]

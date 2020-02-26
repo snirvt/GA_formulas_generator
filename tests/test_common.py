@@ -23,6 +23,7 @@ def create_simple_individual():
     dna_dict[constants.DNA_PARENTHESES_BIAS] = [0,0,0]
     dna_dict[constants.DNA_WL_ACTIVATION] = [0,0,0]
     dna_dict[constants.DNA_PARENTHESES_ACTIVATION] = [0,0,0]
+    dna_dict[constants.DNA_WL_BIAS] = [0,0,0]
     return dna_dict
 
 def create_simple_population():

@@ -3,6 +3,8 @@ import numpy as np
 from multiprocessing import Pool, cpu_count
 import math 
 from numpy import log, sin, cos, exp
+# from sklearn.metrics import r2_score
+
 import constants
 from individual import Individual
 from tree import Tree
@@ -51,6 +53,7 @@ class Evaluator():
         y_pred = eval(valid_math_expression).real
         y_pred = np.nan_to_num(y_pred) # replace nan values with 0
         return utils.r2_score(self.y, y_pred)
+        # return r2_score(self.y, y_pred)
         # except: ## TODO change system division so division by 0 is 0
         #     return -float('inf')
           

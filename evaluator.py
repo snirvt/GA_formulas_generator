@@ -2,7 +2,7 @@
 import numpy as np
 from multiprocessing import Pool, cpu_count
 import math 
-
+from numpy import log, sin, cos, exp
 import constants
 from individual import Individual
 from tree import Tree

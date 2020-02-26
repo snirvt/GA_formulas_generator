@@ -16,6 +16,7 @@ class Values_Handler():
         self.dict[constants.DNA_FEATURES_STR + 'input'] = [0, self.probability_handler.max_feature_number]
         self.dict[constants.DNA_WEIGHTS_STR + 'input']  = []
         self.dict[constants.DNA_PARENTHESES_STR + 'input'] = [0, 2]
+        self.dict[constants.DNA_WL_ACTIVATION + 'input'] = [0, constants.NUM_WL_ACTIVATION]
         
         ## normaly distributed
         self.dict[constants.DNA_SIZE_STR + 'input'] = [3, 1, constants.MIN_SIZE_INDIVIDUAL, constants.MAX_SIZE_INDIVIDUAL]
@@ -38,6 +39,7 @@ class Values_Handler():
         self.dict[constants.DNA_WL_SCALAR] = lambda list_input: ng.generate_gaussian(list_input[0], list_input[1], list_input[2])
         self.dict[constants.DNA_WL_POWER] = lambda list_input: ng.generate_gaussian(list_input[0], list_input[1], list_input[2])
         self.dict[constants.DNA_PARENTHESES_BIAS] = lambda list_input: ng.generate_gaussian(list_input[0], list_input[1], list_input[2])
+        self.dict[constants.DNA_WL_ACTIVATION] = lambda list_input: ng.generate_n_uniform_random_integers(list_input[0], list_input[1], list_input[2])
 
     def get_dict(self):
         return self.dict

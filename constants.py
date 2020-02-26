@@ -5,7 +5,7 @@ MAX_SIZE_INDIVIDUAL = 10
 MAX_START_SIZE_INDIVIDUAL = 5
 MIN_SIZE_INDIVIDUAL = 1
 NUM_ACTIONS = 5
-NUM_WL_ACTIVATION = 4  #id, exp, ln, sin, cos
+NUM_WL_ACTIVATION = 5  #id, exp, ln, sin, cos
 
 #### dna dictionary keys ####
 DNA_SIZE_STR = 'size'

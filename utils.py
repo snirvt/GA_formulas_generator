@@ -34,7 +34,7 @@ def get_activation(activation):  # sin cos exp...
         1:'exp',
         2:'cos',
         3:'sin',
-        # 4: 'ln',
+        4: 'absln',
         
     }
     return switcher.get(int(activation))

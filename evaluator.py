@@ -70,5 +70,5 @@ class Evaluator():
 
 
 
-
-
+def absln(x):
+    return log(abs(x))

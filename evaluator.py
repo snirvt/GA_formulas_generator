@@ -67,8 +67,5 @@ class Evaluator():
     def get_string_data_column(self, column_number):
         return 'X[:,{}]'.format(column_number)
 
-
-
-
 def absln(x):
     return log(abs(x))

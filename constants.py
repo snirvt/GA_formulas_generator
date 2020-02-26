@@ -17,6 +17,7 @@ DNA_WL_SCALAR = 'wl_scalar'
 DNA_WL_POWER = 'wl_power'
 DNA_PARENTHESES_BIAS = 'parentheses_bias'
 DNA_WL_ACTIVATION = 'wl_activation'
+DNA_PARENTHESES_ACTIVATION = 'parentheses_activation'
 
 
 #### changable stats ####

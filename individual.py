@@ -23,6 +23,8 @@ class Individual():
         self.wl_powers = self.vh.create_vector_values(key = constants.DNA_WL_POWER, size = self.individual_size)
         self.parentheses_bias = self.vh.create_vector_values(key = constants.DNA_PARENTHESES_BIAS, size = self.individual_size)
         self.wl_activation = self.vh.create_vector_values(key = constants.DNA_WL_ACTIVATION, size = self.individual_size)
+        self.parentheses_activation = self.vh.create_vector_values(key = constants.DNA_PARENTHESES_ACTIVATION, size = self.individual_size)
+
         return self.create_dna_dictionary()
 
     def create_dna_dictionary(self):
@@ -36,6 +38,7 @@ class Individual():
         self.dna_dict[constants.DNA_WL_POWER] = self.wl_powers
         self.dna_dict[constants.DNA_PARENTHESES_BIAS] = self.parentheses_bias
         self.dna_dict[constants.DNA_WL_ACTIVATION] = self.wl_activation
+        self.dna_dict[constants.DNA_PARENTHESES_ACTIVATION] = self.parentheses_activation
         return self.dna_dict
     
     @staticmethod
@@ -48,7 +51,9 @@ class Individual():
         wl_powers = dna_dict[constants.DNA_WL_POWER]
         parentheses_bias = dna_dict[constants.DNA_PARENTHESES_BIAS]
         wl_activation = dna_dict[constants.DNA_WL_ACTIVATION]
-        return list(zip(tree_values, feature_values, parentheses_values, actions_values, wl_scalars, wl_powers, parentheses_bias, wl_activation))
+        wl_parentheses = dna_dict[constants.DNA_PARENTHESES_ACTIVATION]
+
+        return list(zip(tree_values, feature_values, parentheses_values, actions_values, wl_scalars, wl_powers, parentheses_bias, wl_activation, wl_parentheses))
     
     @staticmethod
     def get_merged_feature_values(merged):
@@ -76,7 +81,7 @@ class Individual():
 
     @staticmethod
     def get_all_merged_values(merged):
-        return merged[1], merged[2] ,merged[3], merged[4], merged[5], merged[6], merged[7]
+        return merged[1], merged[2] ,merged[3], merged[4], merged[5], merged[6], merged[7], merged[8]
 
         
 

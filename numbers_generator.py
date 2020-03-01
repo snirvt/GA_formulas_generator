@@ -28,3 +28,7 @@ def generate_n_uniform_random_integers(min_val , max_val , size ):
 
 def generate_n_binary_numbers(size):
     return generate_n_uniform_random_integers(0 , 2 , size)
+
+def generate_non_uniform_integers(values,distribution_list, size):
+    res =  np.random.choice(values ,size=size, p = distribution_list)  # [0.5, 0.1, 0.1, 0.1, 0.1, 0.1]
+    return list(res)

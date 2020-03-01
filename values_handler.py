@@ -46,9 +46,7 @@ class Values_Handler():
         self.dict[constants.DNA_WL_SCALAR] = lambda list_input: ng.generate_gaussian(list_input[0], list_input[1], list_input[2])
         self.dict[constants.DNA_WL_POWER] = lambda list_input: ng.generate_gaussian(list_input[0], list_input[1], list_input[2])
         self.dict[constants.DNA_PARENTHESES_BIAS] = lambda list_input: ng.generate_gaussian(list_input[0], list_input[1], list_input[2])
-        # self.dict[constants.DNA_WL_ACTIVATION] = lambda list_input: ng.generate_n_uniform_random_integers(list_input[0], list_input[1], list_input[2])
         self.dict[constants.DNA_WL_ACTIVATION] = lambda list_input: ng.generate_non_uniform_integers(list_input[0], list_input[1], list_input[2])
-        # self.dict[constants.DNA_PARENTHESES_ACTIVATION] = lambda list_input: ng.generate_n_uniform_random_integers(list_input[0], list_input[1], list_input[2])
         self.dict[constants.DNA_PARENTHESES_ACTIVATION] = lambda list_input: ng.generate_non_uniform_integers(list_input[0], list_input[1], list_input[2])
         self.dict[constants.DNA_WL_BIAS] = lambda list_input: ng.generate_gaussian(list_input[0], list_input[1], list_input[2])
 

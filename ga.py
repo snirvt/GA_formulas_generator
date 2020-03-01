@@ -92,7 +92,8 @@ class GA():
             best_score_train, best_score_test, best_fenotype_test = self.examine_generation(fitness_vec_train, fitness_vec_test)
 
             if self.prev_top_score < best_score_train:
-                if best_score_test > self.top_global_score_test:
+                # if best_score_test > self.top_global_score_test:
+                if min(self.top_global_score_test, self.top_global_score) < min(best_score_test,best_score_train):
                     self.update_global_best(best_score_test, best_score_train, best_fenotype_test)
                     self.save_results(best_fenotype_test, best_score_test, best_score_train)
                 self.prev_top_score = best_score_train

@@ -50,7 +50,7 @@ def create_dna_dict():
 @pytest.fixture(name="translator_handler")
 def translator_fixture(mocker):
     #  Bring up
-    _, _ , column_names = create_data()
+    _,_, _ ,_, column_names = create_data()
     yield Genom_Translator(column_names=column_names)
     #  Tear Down
 

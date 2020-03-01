@@ -13,9 +13,11 @@ from genom_transaltor import Genom_Translator
 
 class Evaluator():
 
-    def __init__(self, X, y, column_names):
+    def __init__(self, X, X_test, y, y_test, column_names):
         self.X = X
+        self.X_test = X_test
         self.y = y
+        self.y_test = y_test
         self.column_names = column_names
         self.preprocess_x()
         self.genom_transaltor = Genom_Translator(self.column_names)
@@ -24,39 +26,44 @@ class Evaluator():
         self.X = self.X.astype(complex)
 
     def evaluate_population_paralal(self, population):
-        fitness_array = np.empty([len(population)])
+        fitness_array_train = np.empty([len(population)])
+        fitness_array_test = np.empty([len(population)])
         p = Pool(constants.NUM_POOL)
         paralal_input = zip(range(len(population)),population)
         paralal_result = p.map(self.evaluate_individual_paralal, paralal_input)
         p.close()
         p.join()
-        for i, fitness in paralal_result:
-            fitness_array[i] = fitness
-        return fitness_array
+        for i, fitness_train, fitness_test in paralal_result:
+            fitness_array_train[i] = fitness_train
+            fitness_array_test[i] = fitness_test
+        return fitness_array_train, fitness_array_test
+
 
     def evaluate_individual_paralal(self, paralal_input):
         i, individual = paralal_input
-        return i, self.evaluate_individual(individual)
+        train_res, test_res = self.evaluate_individual(individual)
+        return i, train_res, test_res
 
     def evaluate_population(self, population):
-        fitness_array = np.empty([len(population)])
+        fitness_array_train = np.empty([len(population)])
+        fitness_array_test = np.empty([len(population)])
         for i, individual in enumerate(population):
-            fitness_array[i] = self.evaluate_individual(individual)
-        return fitness_array
+            fitness_array_train[i], fitness_array_test[i] = self.evaluate_individual(individual)
+        return fitness_array_train, fitness_array_test
 
-    def evaluate_individual(self, individual):
-        # self.transalete_genotype(individual)
+    def evaluate_individual(self, individual): 
         expression_str = self.genom_transaltor.get_raw_fenotype(individual)
-        X = self.X ## for short string on eval
         valid_math_expression = self.build_math_evaluation(expression_str)
-        # try:
+
+        y_pred_train = self.fixed_eval(self.X, valid_math_expression) 
+        y_pred_test = self.fixed_eval(self.X_test, valid_math_expression)
+
+        return utils.r2_score(self.y, y_pred_train), utils.r2_score(self.y_test, y_pred_test)
+
+    def fixed_eval(self,X, valid_math_expression): ## X is for eval
         y_pred = eval(valid_math_expression).real
-        y_pred = np.nan_to_num(y_pred) # replace nan values with 0
-        return utils.r2_score(self.y, y_pred)
-        # return r2_score(self.y, y_pred)
-        # except: ## TODO change system division so division by 0 is 0
-        #     return -float('inf')
-          
+        return np.nan_to_num(y_pred)
+
     def build_math_evaluation(self, expression):
         split_expression = expression.split('_')
         math_str = ''

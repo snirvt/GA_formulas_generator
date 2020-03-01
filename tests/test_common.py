@@ -5,10 +5,10 @@ import constants
 
 def create_data():
     ## pattern is 0*1/2
-    X = np.random.rand(100,3)
+    X = np.random.rand(200,3)
     y = X[:,0] * X[:,1] / X[:,2]
     column_names = [1,2,3]
-    return X, y, column_names
+    return X[:100,:],X[100:,:], y[:100], y[100:], column_names
 
 
 def create_simple_individual():

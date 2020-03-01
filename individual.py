@@ -62,29 +62,6 @@ class Individual():
          actions_values, wl_scalars, wl_powers, parentheses_bias, wl_activation,
           wl_parentheses, wl_bias, parentheses_power))
     
-    @staticmethod
-    def get_merged_feature_values(merged):
-        return merged[1]
-
-    @staticmethod
-    def get_merged_parentheses_values(merged):
-        return merged[2]
-
-    @staticmethod
-    def get_merged_actions_values(merged):
-        return merged[3]
-    
-    @staticmethod
-    def get_merged_wl_scalars(merged):
-        return merged[4]
-
-    @staticmethod
-    def get_merged_wl_powers(merged):
-        return merged[5]
-
-    @staticmethod
-    def get_merged_parentheses_bias(merged):
-        return merged[6]
 
     @staticmethod
     def get_all_merged_values(merged):

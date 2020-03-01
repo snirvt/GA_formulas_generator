@@ -25,13 +25,15 @@ class Values_Handler():
         self.dict[constants.DNA_WL_POWER + 'input'] = [1, 0.5]
         self.dict[constants.DNA_PARENTHESES_BIAS + 'input'] = [0, 0.5]
         self.dict[constants.DNA_WL_BIAS + 'input'] = [0, 0.5]
-        
+        self.dict[constants.DNA_PARENTHESES_POWER + 'input'] = [1, 0.5]
+
         self.dict['normaly distributed'] = []
         self.dict['normaly distributed'].append(constants.DNA_SIZE_STR)
         self.dict['normaly distributed'].append(constants.DNA_WL_SCALAR)
         self.dict['normaly distributed'].append(constants.DNA_WL_POWER)
         self.dict['normaly distributed'].append(constants.DNA_PARENTHESES_BIAS)
         self.dict['normaly distributed'].append(constants.DNA_WL_BIAS)
+        self.dict['normaly distributed'].append(constants.DNA_PARENTHESES_POWER)
 
     def create_activation_input(self, id_chance = 0.5):
         num_activation = constants.NUM_WL_ACTIVATION
@@ -49,6 +51,7 @@ class Values_Handler():
         self.dict[constants.DNA_WL_ACTIVATION] = lambda list_input: ng.generate_non_uniform_integers(list_input[0], list_input[1], list_input[2])
         self.dict[constants.DNA_PARENTHESES_ACTIVATION] = lambda list_input: ng.generate_non_uniform_integers(list_input[0], list_input[1], list_input[2])
         self.dict[constants.DNA_WL_BIAS] = lambda list_input: ng.generate_gaussian(list_input[0], list_input[1], list_input[2])
+        self.dict[constants.DNA_PARENTHESES_POWER] = lambda list_input: ng.generate_gaussian(list_input[0], list_input[1], list_input[2])
 
     def get_dict(self):
         return self.dict

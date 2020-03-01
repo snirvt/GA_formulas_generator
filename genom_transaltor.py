@@ -35,7 +35,7 @@ class Genom_Translator():
     def extract_tree_expression(self, node, index_mark = '_'):
         if node == None or node.data == None:
             return self.expression_str
-        feature, parentheses, action, wl_scalar, wl_power, parentheses_bias, wl_activation, parentheses_activation, wl_bias  = Individual.get_all_merged_values(node.data)
+        feature, parentheses, action, wl_scalar, wl_power, parentheses_bias, wl_activation, parentheses_activation, wl_bias, parentheses_power  = Individual.get_all_merged_values(node.data)
         
         if parentheses == 1:
             self.expression_str += utils.get_activation(parentheses_activation) + '('
@@ -50,7 +50,7 @@ class Genom_Translator():
         self.expression_str = self.extract_tree_expression(node.right, index_mark)
 
         if parentheses == 1:
-            self.expression_str = self.expression_str[:-1] + '+{})'.format(parentheses_bias) + self.expression_str[-1] ## put closing parentesis before action
+            self.expression_str = self.expression_str[:-1] + '+{})'.format(parentheses_bias) + '**{}'.format(parentheses_power) + self.expression_str[-1] ## put closing parentesis before action
         return self.expression_str
 
     def fix_expression(self, expression):

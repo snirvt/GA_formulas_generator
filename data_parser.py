@@ -11,12 +11,12 @@ class Data_Parser():
         return pd.read_excel(path)
 
     @staticmethod
-    def get_matrix_data(path):
+    def get_matrix_data(path, X_columns = 1, y_column = 0):
         df = Data_Parser.get_data_frame(path)
-        column_names = list(df)[1:] # not taking the first name
+        column_names = list(df)[X_columns:] # not taking the first name
         mat = df.values
-        X = mat[:, 1:]
-        y = mat[:, 0] 
+        X = mat[:, X_columns:]
+        y = mat[:, y_column] 
         return X, y , column_names
 
 

@@ -7,6 +7,12 @@ from numpy import inf
 def swap_binary_value(binary_val):
     return 1 - binary_val
 
+def scale(m):
+    return (m-np.mean(m))/np.std(m)
+    
+def mse(y_true, y_pred):
+    return np.sum((y_true-y_pred)**2)/len(y_true)
+
 def r2_score(y_true, y_pred):
     if len(y_pred[y_pred == -inf]) > 0 or len(y_pred[y_pred == inf]) > 0:
         print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
@@ -26,8 +32,6 @@ def get_action(action):
     }
     return switcher.get(int(action))
 
-
-
 def get_activation(activation):  # sin cos exp...
     switcher = {
         0:'', #identity
@@ -35,7 +39,6 @@ def get_activation(activation):  # sin cos exp...
         2:'cos',
         3:'sin',
         4: 'absln',
-        
     }
     return switcher.get(int(activation))
 

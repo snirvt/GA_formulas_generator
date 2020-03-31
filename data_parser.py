@@ -13,6 +13,7 @@ class Data_Parser():
     @staticmethod
     def get_matrix_data(path, X_columns = 1, y_column = 0):
         df = Data_Parser.get_data_frame(path)
+        df = df.dropna()
         column_names = list(df)[X_columns:] # not taking the first name
         mat = df.values
         X = mat[:, X_columns:]

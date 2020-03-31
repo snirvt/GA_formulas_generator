@@ -26,30 +26,38 @@ class Evaluator():
         self.X = self.X.astype(complex)
 
     def evaluate_population_paralal(self, population):
-        fitness_array_train = np.empty([len(population)])
-        fitness_array_test = np.empty([len(population)])
+        fitness_array_train_mse = np.empty([len(population)])
+        fitness_array_test_mse = np.empty([len(population)])
+        fitness_array_train_r2 = np.empty([len(population)])
+        fitness_array_test_r2 = np.empty([len(population)])
+
         p = Pool(constants.NUM_POOL)
         paralal_input = zip(range(len(population)),population)
         paralal_result = p.map(self.evaluate_individual_paralal, paralal_input)
         p.close()
         p.join()
-        for i, fitness_train, fitness_test in paralal_result:
-            fitness_array_train[i] = fitness_train
-            fitness_array_test[i] = fitness_test
-        return fitness_array_train, fitness_array_test
+        for i, fitness_train_mse, fitness_test_mse, fitness_train_r2, fitness_test_r2 in paralal_result:
+            fitness_array_train_mse[i] = fitness_train_mse
+            fitness_array_test_mse[i] = fitness_test_mse
+            fitness_array_train_r2[i] = fitness_train_r2
+            fitness_array_test_r2[i] = fitness_test_r2
+        return fitness_array_train_mse, fitness_array_test_mse, fitness_array_train_r2, fitness_array_test_r2
 
 
     def evaluate_individual_paralal(self, paralal_input):
         i, individual = paralal_input
-        train_res, test_res = self.evaluate_individual(individual)
-        return i, train_res, test_res
+        train_res_mse, test_res_mse, train_res_r2, test_res_r2 = self.evaluate_individual(individual)
+        return i, train_res_mse, test_res_mse, train_res_r2, test_res_r2
 
     def evaluate_population(self, population):
         fitness_array_train = np.empty([len(population)])
         fitness_array_test = np.empty([len(population)])
+        fitness_array_train_r2 = np.empty([len(population)])
+        fitness_array_test_r2 = np.empty([len(population)])
+
         for i, individual in enumerate(population):
-            fitness_array_train[i], fitness_array_test[i] = self.evaluate_individual(individual)
-        return fitness_array_train, fitness_array_test
+            fitness_array_train[i], fitness_array_test[i],fitness_array_train_r2[i], fitness_array_test_r2[i] = self.evaluate_individual(individual)
+        return fitness_array_train, fitness_array_test, fitness_array_train_r2, fitness_array_test_r2
 
     def evaluate_individual(self, individual): 
         expression_str = self.genom_transaltor.get_raw_fenotype(individual)
@@ -57,9 +65,10 @@ class Evaluator():
 
         y_pred_train = self.fixed_eval(self.X, valid_math_expression) 
         y_pred_test = self.fixed_eval(self.X_test, valid_math_expression)
-
-        return utils.r2_score(self.y, y_pred_train), utils.r2_score(self.y_test, y_pred_test)
-
+        # return utils.r2_score(self.y, y_pred_train), utils.r2_score(self.y_test, y_pred_test)
+        return utils.mse(self.y, y_pred_train), utils.mse(self.y_test, y_pred_test), utils.r2_score(self.y, y_pred_train), utils.r2_score(self.y_test, y_pred_test) 
+    
+    
     def fixed_eval(self,X, valid_math_expression): ## X is for eval
         y_pred = eval(valid_math_expression).real
         return np.nan_to_num(y_pred)

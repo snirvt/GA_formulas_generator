@@ -7,7 +7,6 @@ from population_handler import Population_Handler
 from probability_handler import Probability_Handler
 import constants
 from evaluator import Evaluator
-from data_parser import Data_Parser
 from mating_handler import Mating_Handler
 from generation_creator import Generation_Creator
 from result_handler import Result_Handler
@@ -65,17 +64,19 @@ class GA():
         self.no_imrovment_counter = 1
         self.prev_top_score = float('-inf')
 
-    def examine_generation(self,fitness_vec_train, fitness_vec_test):
-        fittest_index_train = np.argmax(fitness_vec_train)
-        fittest_index_test = np.argmax(fitness_vec_test)
+    def examine_generation(self, fitness_vec_train, fitness_vec_test,fitness_vec_train_r2, fitness_vec_test_r2):
+        fittest_index_train = np.argmin(fitness_vec_train)
+        fittest_index_test = np.argmin(fitness_vec_test)
         fittest_individual_train = self.get_population()[fittest_index_train]
         fittest_individual_test = self.get_population()[fittest_index_test]
         best_fenotype_train = self.genom_translator.translate_genotype(fittest_individual_train)
         best_fenotype_test = self.genom_translator.translate_genotype(fittest_individual_test)
-        best_score_test = fitness_vec_test[fittest_index_test]
-        best_score_train = fitness_vec_train[fittest_index_test]
-        print('best of generation train: {}, fenotype: {}'.format(np.round(np.max(fitness_vec_train),3), best_fenotype_train))
-        print('best of generation test: {}, fenotype: {}'.format(np.round(np.max(fitness_vec_test),3), best_fenotype_test))
+        best_score_test = fitness_vec_test_r2[fittest_index_test]
+        best_score_train = fitness_vec_train_r2[fittest_index_train]
+
+        print('best of generation train: r2: {}, mse: {}'.format(np.round(best_score_train,3), np.round(fitness_vec_train[fittest_index_train],3)))
+        print('best of generation test: r2: {}, mse: {}'.format(np.round(best_score_test,3), np.round(fitness_vec_test[fittest_index_test],3)))
+
         return best_score_train, best_score_test, best_fenotype_test
 
     def update_global_best(self, best_score_test, best_score_train, best_fenotype_test):
@@ -88,8 +89,8 @@ class GA():
         for _ in range(50):
             if self.no_imrovment_counter % 10 == 0:
                 self.restart_population()
-            fitness_vec_train, fitness_vec_test = self.fitness()
-            best_score_train, best_score_test, best_fenotype_test = self.examine_generation(fitness_vec_train, fitness_vec_test)
+            fitness_vec_train, fitness_vec_test, fitness_vec_train_r2, fitness_vec_test_r2 = self.fitness()
+            best_score_train, best_score_test, best_fenotype_test = self.examine_generation(fitness_vec_train, fitness_vec_test,fitness_vec_train_r2, fitness_vec_test_r2)
 
             if self.prev_top_score < best_score_train:
                 # if best_score_test > self.top_global_score_test:

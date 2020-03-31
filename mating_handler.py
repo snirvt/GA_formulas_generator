@@ -16,4 +16,5 @@ class Mating_Handler():
 
     def sort_by_fitness(self, population, population_fitness):
         fitness_sorting_index = np.argsort(population_fitness)
-        return population[fitness_sorting_index[::-1]] # reverse sort population by fitness
+        # return population[fitness_sorting_index[::-1]] # reverse sort population by fitness
+        return population[fitness_sorting_index] # reverse sort population by fitness

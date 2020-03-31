@@ -87,19 +87,7 @@ def mutation_handler_fixture(mocker):
     #  Tear Down
 
 
-@pytest.fixture(name="dna_dict")
-def dict_fixture(mocker):
-    #  Bring up
-    dna_dict = {}
-    dna_dict[constants.DNA_SIZE_STR] = 3
-    dna_dict[constants.DNA_FEATURES_STR] = [0,1,2]
-    dna_dict[constants.DNA_WEIGHTS_STR] = [0,1,2]
-    dna_dict[constants.DNA_PARENTHESES_STR] = [0,1,1]
-    dna_dict[constants.DNA_ACTIONS_STR] = [0,1,2]
 
-    yield dna_dict
-    #  Tear Down
- 
 @pytest.mark.parametrize('dna_dict_size', [5,6])
 @pytest.mark.parametrize("gaus_int", [5, 7])
 def test_mutate_size(gaus_int, dna_dict_size, mut_handler, mocker):

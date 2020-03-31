@@ -20,12 +20,12 @@ def mating_fixture(mocker):
 @pytest.mark.parametrize('fittness', [np.array([5,3,2,1,4,6])])
 def test_sort_by_fitness(population, fittness, mate_handler):
     reversed_sorted = mate_handler.sort_by_fitness(population = population, population_fitness = fittness)
-    assert(np.all(reversed_sorted == np.array(['f', 'e', 'd', 'c', 'b', 'a'])))
+    assert(np.all(reversed_sorted == np.array(['a', 'b', 'c', 'd', 'e', 'f'])))
 
 @pytest.mark.parametrize('population', [np.array(['e','c','b','a','h','d','g','f'])])
 @pytest.mark.parametrize('fittness', [np.array([5,3,2,1,8,4,7,6])])
 def test_choose_parents(population, fittness, mate_handler):
     sorted_population, num_parents = mate_handler.choose_parents(population = population, population_fitness = fittness)
     assert(num_parents == 4)
-    assert(np.all(sorted_population[:2] == np.array(['h', 'g']))) ## check for num_parents/2 best individuals are parents
+    assert(np.all(sorted_population[:2] == np.array(['a', 'b']))) ## check for num_parents/2 best individuals are parents
 

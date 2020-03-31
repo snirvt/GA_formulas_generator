@@ -9,18 +9,18 @@ from genom_transaltor import Genom_Translator
 import constants
 
 class Test_Genom_Transaltor(unittest.TestCase):
-    def test_build_individual_binary_tree(self):
-        dna_dict,pre_order_correct = create_dna_dict()
-        genom_translator = Genom_Translator(column_names=None)
-        genom_translator.build_individual_binary_tree(dna_dict)
-        tree = genom_translator.tree
-        self.assertIsNotNone(tree)
-        pre_order_result = []
-        tree.pre_order(pre_order_result)
-        self.assertIsNotNone(pre_order_result)
-        self.assertEqual(pre_order_result, pre_order_correct)
-        genom_translator.build_individual_binary_tree(dna_dict) ## check if the first tree is deleted
-        self.assertEqual(pre_order_result, pre_order_correct)
+    # def test_build_individual_binary_tree(self):
+    #     dna_dict,pre_order_correct = create_dna_dict()
+    #     genom_translator = Genom_Translator(column_names=None)
+    #     genom_translator.build_individual_binary_tree(dna_dict)
+    #     tree = genom_translator.tree
+    #     self.assertIsNotNone(tree)
+    #     pre_order_result = []
+    #     tree.pre_order(pre_order_result)
+    #     self.assertIsNotNone(pre_order_result)
+    #     self.assertEqual(pre_order_result, pre_order_correct)
+    #     genom_translator.build_individual_binary_tree(dna_dict) ## check if the first tree is deleted
+    #     self.assertEqual(pre_order_result, pre_order_correct)
 
     def test_extract_tree_expression(self):
         dna_dict, _ = create_dna_dict()
@@ -30,6 +30,28 @@ class Test_Genom_Transaltor(unittest.TestCase):
         expression = genom_translator.extract_tree_expression(tree.node, index_mark = '_')
         self.assertIsNotNone(expression)
         self.assertEqual(expression, 'sin(exp(1*_1_**1+0)+(1*_3_**1+0)*(1*_5_**1+0)^(cos(1*_2_**1+0)-((1*_4_**1+0)+0)**1/(1*_6_**1+0)+0)**1+0)**1+')
+
+
+@pytest.fixture(name="genom_translator")
+def genom_translator_fixture(mocker):
+    #  Bring up
+    yield Genom_Translator(column_names=None)
+
+
+def test_build_individual_binary_tree(genom_translator):
+    dna_dict, pre_order_correct = create_dna_dict()
+    genom_translator.build_individual_binary_tree(dna_dict)
+    tree = genom_translator.tree
+    pre_order_result = []
+    tree.pre_order(pre_order_result)
+    assert(pre_order_result == pre_order_correct)
+    genom_translator.build_individual_binary_tree(dna_dict) ## check if the first tree is deleted
+    pre_order_result = []
+    tree.pre_order(pre_order_result)
+    assert(pre_order_result == pre_order_correct)
+
+
+
 
 def create_dna_dict():
     dna_dict = {}

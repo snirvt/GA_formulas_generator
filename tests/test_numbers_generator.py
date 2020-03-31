@@ -52,6 +52,16 @@ def test_generate_gaussian(mu, sigma, size):
     result = ng.generate_gaussian(mu=mu, sigma=sigma, size = size)
     assert(len(result) == size)
 
+
+@pytest.mark.parametrize('values', [[1,2,3]])
+@pytest.mark.parametrize('distribution_list', [[1/3,1/3,1/3]])
+@pytest.mark.parametrize('size', [5])
+def test_generate_non_uniform_integers(values, distribution_list, size):
+    result = ng.generate_non_uniform_integers(values=values, distribution_list=distribution_list, size = size)
+    assert(len(result) == size)
+    assert(np.min(result) >= np.min(values))
+    assert(np.max(result) <= np.max(values))
+    
 def check_if_binary(iterator):
     for value in iterator:
         if value != 0 and value != 1:

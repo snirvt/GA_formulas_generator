@@ -46,8 +46,7 @@ def create_test_population_handler(max_individual_size = 10, num_features = 10):
     return ph
 
 
-if __name__ == '__main__':
-    unittest.main()
+
 
 
 

@@ -1,6 +1,7 @@
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import copy
 ###################################
 from population_handler import Population_Handler
@@ -14,16 +15,19 @@ from genom_transaltor import Genom_Translator
 ###################################
 
 class GA():
-    def __init__(self, X, X_test, y, y_test, column_names, parlal = False):
+    def __init__(self, X, X_test, y, y_test, column_names,output_path, parlal = False):
         self.X = X
         self.X_test = X_test
         self.y = y
         self.y_test = y_test
         self.column_names = column_names
+        self.output_path = output_path
         self.paralal = parlal
         self.top_global_score = float('-inf')
         self.top_global_score_test = float('-inf')
-        # self.top_individual = None
+
+        self.top_individual = None
+
         self.top_fenotype = None
         self.no_imrovment_counter = 0
         self.prev_top_score = float('-inf')
@@ -46,6 +50,30 @@ class GA():
         self.result_handler = Result_Handler()
         self.genom_translator = Genom_Translator(column_names = self.column_names)
 
+
+    def plot_res(self):
+        y_pred_train, y_pred_test = self.evaluator.make_prediction(self.top_individual)
+        
+        plt.figure(1)
+        plt.subplot(211)
+        plt.plot(self.y)
+        plt.plot(y_pred_train)
+        plt.title('train')
+        plt.subplot(212)
+        plt.plot(self.y_test)
+        plt.plot(y_pred_test)
+        plt.title('test')
+        plt.show(block=False)
+
+        plt.figure(2)
+        plt.subplot(211)
+        plt.scatter(self.y, y_pred_train)
+        plt.title('train')
+        plt.subplot(212)
+        plt.scatter(self.y_test, y_pred_test)
+        plt.title('test')
+        plt.show(block=False)
+
     def create_population(self, population_size = 10):
         self.population_handler.create_population(population_size = population_size)
     
@@ -56,7 +84,7 @@ class GA():
         df = pd.DataFrame([fenotype, score_test, score_train])
         df = df.T
         df.columns = ['formula', 'r2_score_test', 'r2_score_train']
-        self.result_handler.save_to_file(path = 'results/results.xlsx', sheetName = 'results',df = df, append = True, header=True)
+        self.result_handler.save_to_file(path =self.output_path , sheetName = 'results',df = df, append = True, header=True)
 
     def restart_population(self):
         self.create_population(population_size = 1000)
@@ -72,33 +100,46 @@ class GA():
         best_fenotype_train = self.genom_translator.translate_genotype(fittest_individual_train)
         best_fenotype_test = self.genom_translator.translate_genotype(fittest_individual_test)
         best_score_test = fitness_vec_test_r2[fittest_index_test]
-        best_score_train = fitness_vec_train_r2[fittest_index_train]
-
+        # best_score_train = fitness_vec_train_r2[fittest_index_train]
+        best_score_train = fitness_vec_train_r2[fittest_index_test]
         print('best of generation train: r2: {}, mse: {}'.format(np.round(best_score_train,3), np.round(fitness_vec_train[fittest_index_train],3)))
         print('best of generation test: r2: {}, mse: {}'.format(np.round(best_score_test,3), np.round(fitness_vec_test[fittest_index_test],3)))
 
-        return best_score_train, best_score_test, best_fenotype_test
+        return best_score_train, best_score_test, best_fenotype_test, fittest_individual_test
 
-    def update_global_best(self, best_score_test, best_score_train, best_fenotype_test):
+    def update_global_best(self, best_score_test, best_score_train, best_fenotype_test, fittest_individual_test):
         print('new best:')
         self.top_global_score_test = best_score_test
         self.top_global_score = best_score_train
         self.top_fenotype = copy.deepcopy(best_fenotype_test)
+        self.top_individual = fittest_individual_test
 
-    def natural_selection(self): # fitness -> mating_pool -> create_new_generation -> mutate -> crossover
-        for _ in range(50):
-            if self.no_imrovment_counter % 10 == 0:
+
+    def natural_selection(self, iterations=50, patience = 10): # fitness -> mating_pool -> create_new_generation -> mutate -> crossover
+        for _ in range(iterations):
+            if self.no_imrovment_counter % patience == 0:
                 self.restart_population()
             fitness_vec_train, fitness_vec_test, fitness_vec_train_r2, fitness_vec_test_r2 = self.fitness()
-            best_score_train, best_score_test, best_fenotype_test = self.examine_generation(fitness_vec_train, fitness_vec_test,fitness_vec_train_r2, fitness_vec_test_r2)
+            best_score_train, best_score_test, best_fenotype_test, fittest_individual_test = self.examine_generation(fitness_vec_train, fitness_vec_test,fitness_vec_train_r2, fitness_vec_test_r2)
 
             if self.prev_top_score < best_score_train:
-                # if best_score_test > self.top_global_score_test:
                 if min(self.top_global_score_test, self.top_global_score) < min(best_score_test,best_score_train):
-                    self.update_global_best(best_score_test, best_score_train, best_fenotype_test)
+                    self.update_global_best(best_score_test, best_score_train, best_fenotype_test, fittest_individual_test)
                     self.save_results(best_fenotype_test, best_score_test, best_score_train)
                 self.prev_top_score = best_score_train
                 self.no_imrovment_counter = 1
+
+            # if True:
+            #     self.update_global_best(best_score_test, best_score_train, best_fenotype_test)
+            #     self.save_results(best_fenotype_test, best_score_test, best_score_train)
+
+            # if self.prev_top_score < best_score_train:
+            #     # if best_score_test > self.top_global_score_test:
+            #     if min(self.top_global_score_test, self.top_global_score) < min(best_score_test,best_score_train):
+            #         self.update_global_best(best_score_test, best_score_train, best_fenotype_test)
+            #         self.save_results(best_fenotype_test, best_score_test, best_score_train)
+            #     self.prev_top_score = best_score_train
+            #     self.no_imrovment_counter = 1
 
             parents_front, num_parents = self.mating_pool(fitness_vec = fitness_vec_train)
             self.create_new_generation(parents_front = parents_front, num_parents = num_parents)

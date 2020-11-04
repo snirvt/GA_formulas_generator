@@ -27,7 +27,7 @@ class Test_ga(unittest.TestCase):
 
 def create_ga_test(population_size = 10):
     X, X_test, y, y_test, column_names = create_data()
-    ga = GA(X=X, X_test = X_test, y=y, y_test = y_test, column_names = column_names)
+    ga = GA(X=X, X_test = X_test, y=y, y_test = y_test, column_names = column_names,output_path='test')
     return ga
 
 

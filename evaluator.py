@@ -24,6 +24,7 @@ class Evaluator():
 
     def preprocess_x(self):
         self.X = self.X.astype(complex)
+        self.X_test = self.X_test.astype(complex)
 
     def evaluate_population_paralal(self, population):
         fitness_array_train_mse = np.empty([len(population)])
@@ -59,15 +60,22 @@ class Evaluator():
             fitness_array_train[i], fitness_array_test[i],fitness_array_train_r2[i], fitness_array_test_r2[i] = self.evaluate_individual(individual)
         return fitness_array_train, fitness_array_test, fitness_array_train_r2, fitness_array_test_r2
 
+# math.isnan(self.evaluate_individual(individual))
     def evaluate_individual(self, individual): 
+        y_pred_train, y_pred_test = self.make_prediction(individual)
+        return utils.mse(self.y, y_pred_train), utils.mse(self.y_test, y_pred_test), utils.r2_score(self.y, y_pred_train), utils.r2_score(self.y_test, y_pred_test) 
+    
+
+    def make_prediction(self, individual): 
         expression_str = self.genom_transaltor.get_raw_fenotype(individual)
         valid_math_expression = self.build_math_evaluation(expression_str)
 
         y_pred_train = self.fixed_eval(self.X, valid_math_expression) 
         y_pred_test = self.fixed_eval(self.X_test, valid_math_expression)
         # return utils.r2_score(self.y, y_pred_train), utils.r2_score(self.y_test, y_pred_test)
-        return utils.mse(self.y, y_pred_train), utils.mse(self.y_test, y_pred_test), utils.r2_score(self.y, y_pred_train), utils.r2_score(self.y_test, y_pred_test) 
-    
+        return y_pred_train, y_pred_test 
+
+
     
     def fixed_eval(self,X, valid_math_expression): ## X is for eval
         y_pred = eval(valid_math_expression).real

@@ -55,8 +55,7 @@ class GA():
 
     def plot_res(self):
         y_pred_train, y_pred_test = self.evaluator.make_prediction(self.top_individual)  
-        y_pred_train = y_pred_train*self.a + self.b
-        y_pred_test = y_pred_test*self.a + self.b
+
         
         plt.figure(1)
         plt.subplot(211)

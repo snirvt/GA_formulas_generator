@@ -28,7 +28,3 @@ def test_get_activation(test_input, expected):
     assert(result == expected)
 
 
-@pytest.mark.parametrize("test_input, expected", [([np.array([1,1,1]),np.array([1,1,1])], 0),([np.array([1,1,1]),np.array([0,0,0])], 1),([np.array([1,2,3]),np.array([1,4,9])], 13.3333)])
-def test_mse(test_input, expected):
-    result = utils.mse(test_input[0],test_input[1])
-    assert(round(result,3) == round(expected,3))

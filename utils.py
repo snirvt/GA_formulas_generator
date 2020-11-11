@@ -10,17 +10,6 @@ def swap_binary_value(binary_val):
 def scale(m):
     return (m-np.mean(m))/np.std(m)
     
-def mse(y_true, y_pred):
-    return np.sum((y_true-y_pred)**2)/len(y_true)
-
-def r2_score(y_true, y_pred):
-    if len(y_pred[y_pred == -inf]) > 0 or len(y_pred[y_pred == inf]) > 0:
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-    y_pred[y_pred == -inf] = 0
-    y_pred[y_pred == inf] = 0
-    SS_reg = np.sum((y_pred - y_true)**2)
-    SS_tot = np.sum((np.mean(y_true) - y_true)**2)
-    return 1 - SS_reg/SS_tot
 
 def get_action(action):
     switcher = {
@@ -41,8 +30,6 @@ def get_activation(activation):  # sin cos exp...
         4: 'absln',
     }
     return switcher.get(int(activation))
-
-
 
 
 

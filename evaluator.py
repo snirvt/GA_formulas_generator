@@ -3,6 +3,9 @@ import numpy as np
 from multiprocessing import Pool, cpu_count
 import math 
 from numpy import log, sin, cos, exp
+from sklearn.metrics import mean_squared_error as mse
+from sklearn.metrics import r2_score
+
 # from sklearn.metrics import r2_score
 
 import constants
@@ -63,7 +66,7 @@ class Evaluator():
 # math.isnan(self.evaluate_individual(individual))
     def evaluate_individual(self, individual): 
         y_pred_train, y_pred_test = self.make_prediction(individual)
-        return utils.mse(self.y, y_pred_train), utils.mse(self.y_test, y_pred_test), utils.r2_score(self.y, y_pred_train), utils.r2_score(self.y_test, y_pred_test) 
+        return mse(self.y, y_pred_train), mse(self.y_test, y_pred_test), r2_score(self.y, y_pred_train), r2_score(self.y_test, y_pred_test) 
     
 
     def make_prediction(self, individual): 
@@ -80,7 +83,7 @@ class Evaluator():
 
 
         # return utils.r2_score(self.y, y_pred_train), utils.r2_score(self.y_test, y_pred_test)
-        return y_pred_train.reshape(-1,1), y_pred_test.reshape(-1,1)
+        return y_pred_train, y_pred_test
 
 
     
@@ -102,4 +105,4 @@ class Evaluator():
         return 'X[:,{}]'.format(column_number)
 
 def absln(x):
-    return log(abs(x))
+    return log(abs(x)).astype(complex)

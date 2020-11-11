@@ -72,8 +72,15 @@ class Evaluator():
 
         y_pred_train = self.fixed_eval(self.X, valid_math_expression) 
         y_pred_test = self.fixed_eval(self.X_test, valid_math_expression)
+
+        Q = np.hstack((np.reshape(y_pred_train, (-1, 1)), np.ones((len(y_pred_train), 1))))
+        (a, b), _, _, _ = np.linalg.lstsq(Q, self.y, rcond=None)   
+        y_pred_train = y_pred_train*a + b
+        y_pred_test = y_pred_test*a + b
+
+
         # return utils.r2_score(self.y, y_pred_train), utils.r2_score(self.y_test, y_pred_test)
-        return y_pred_train, y_pred_test 
+        return y_pred_train.reshape(-1,1), y_pred_test.reshape(-1,1)
 
 
     

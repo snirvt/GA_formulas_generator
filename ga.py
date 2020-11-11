@@ -27,6 +27,8 @@ class GA():
         self.top_global_score_test = float('-inf')
 
         self.top_individual = None
+        self.a = None
+        self.b = None
 
         self.top_fenotype = None
         self.no_imrovment_counter = 0
@@ -52,7 +54,9 @@ class GA():
 
 
     def plot_res(self):
-        y_pred_train, y_pred_test = self.evaluator.make_prediction(self.top_individual)
+        y_pred_train, y_pred_test = self.evaluator.make_prediction(self.top_individual)  
+        y_pred_train = y_pred_train*self.a + self.b
+        y_pred_test = y_pred_test*self.a + self.b
         
         plt.figure(1)
         plt.subplot(211)
@@ -81,9 +85,9 @@ class GA():
         return self.population_handler.get_population()
 
     def save_results(self, fenotype, score_test, score_train):
-        df = pd.DataFrame([fenotype, score_test, score_train])
+        df = pd.DataFrame([fenotype,'{}/{}'.format(self.a,self.b), score_test, score_train])
         df = df.T
-        df.columns = ['formula', 'r2_score_test', 'r2_score_train']
+        df.columns = ['formula','slope/bias', 'r2_score_test', 'r2_score_train']
         self.result_handler.save_to_file(path =self.output_path , sheetName = 'results',df = df, append = True, header=True)
 
     def restart_population(self):
@@ -113,6 +117,13 @@ class GA():
         self.top_global_score = best_score_train
         self.top_fenotype = copy.deepcopy(best_fenotype_test)
         self.top_individual = fittest_individual_test
+
+        y_pred_train, _ = self.evaluator.make_prediction(self.top_individual)
+        Q = np.hstack((np.reshape(y_pred_train, (-1, 1)), np.ones((len(y_pred_train), 1))))
+        (a, b), _, _, _ = np.linalg.lstsq(Q, self.y, rcond=None)   
+
+        self.a = a
+        self.b = b
 
 
     def natural_selection(self, iterations=50, patience = 10): # fitness -> mating_pool -> create_new_generation -> mutate -> crossover

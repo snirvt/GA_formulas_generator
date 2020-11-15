@@ -73,15 +73,16 @@ class Evaluator():
         expression_str = self.genom_transaltor.get_raw_fenotype(individual)
         valid_math_expression = self.build_math_evaluation(expression_str)
 
-        y_pred_train = self.fixed_eval(self.X, valid_math_expression) 
-        y_pred_test = self.fixed_eval(self.X_test, valid_math_expression)
+        try:
+            y_pred_train = self.fixed_eval(self.X, valid_math_expression) 
+            y_pred_test = self.fixed_eval(self.X_test, valid_math_expression)
+            Q = np.hstack((np.reshape(y_pred_train, (-1, 1)), np.ones((len(y_pred_train), 1))))
+            (a, b), _, _, _ = np.linalg.lstsq(Q, self.y, rcond=None)  
 
-        Q = np.hstack((np.reshape(y_pred_train, (-1, 1)), np.ones((len(y_pred_train), 1))))
-        (a, b), _, _, _ = np.linalg.lstsq(Q, self.y, rcond=None)   
+        except:
+            print('exception') 
         y_pred_train = y_pred_train*a + b
         y_pred_test = y_pred_test*a + b
-
-
         # return utils.r2_score(self.y, y_pred_train), utils.r2_score(self.y_test, y_pred_test)
         return y_pred_train, y_pred_test
 
@@ -89,7 +90,10 @@ class Evaluator():
     
     def fixed_eval(self,X, valid_math_expression): ## X is for eval
         y_pred = eval(valid_math_expression).real
-        return np.nan_to_num(y_pred)
+        y_pred[y_pred!=y_pred] = 0
+        y_pred[np.abs(y_pred) == np.inf] = 0
+        return y_pred
+        # return np.nan_to_num(y_pred)
 
     def build_math_evaluation(self, expression):
         split_expression = expression.split('_')
